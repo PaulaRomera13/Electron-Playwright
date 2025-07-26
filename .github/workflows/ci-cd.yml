@@ -178,16 +178,28 @@ jobs:
       with:
         path: artifacts
 
+    - name: Leer CHANGELOG.md para body del release
+      id: changelog
+      run: |
+        # Lee el contenido de CHANGELOG.md (o una parte si quieres)
+        # Aquí lees TODO el archivo
+        cat CHANGELOG.md > changelog.txt
+        # Luego lo pasamos a output multilinea
+        echo "body<<EOF" >> $GITHUB_OUTPUT
+        cat changelog.txt >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
     - name: Crear Release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: v${{ steps.version.outputs.version }}
         name: Release v${{ steps.version.outputs.version }}
+        body: ${{ steps.changelog.outputs.body }}
         files: |
           artifacts/electron-app-linux/**/*
           artifacts/electron-app-windows/**/*
           artifacts/electron-app-macos/**/*
-          **/*
-          
+          artifacts/project-source-v${{ steps.version.outputs.version }}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
