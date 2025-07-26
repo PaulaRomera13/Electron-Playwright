@@ -7,271 +7,218 @@ on:
     branches: [ master ]
 
 permissions:
-  contents: write  # ✅ Necesario para que softprops/action-gh-release cree un release
-  
+  contents: write
+
 jobs:
-  # Job para verificar sintaxis y linting
   lint:
     name: Lint y verificar sintaxis
     runs-on: ubuntu-latest
-    
     steps:
     - name: Checkout código
       uses: actions/checkout@v4
-      
+
     - name: Configurar Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '22.9.0'
         cache: 'npm'
-        
+
     - name: Instalar dependencias
       run: npm install
-      
+
     - name: Convertir saltos de línea a LF en todos los JS
       run: |
-        echo "Convirtiendo saltos de línea a LF en todos los archivos .js..."
+        echo "Convirtiendo saltos de línea a LF..."
         find . -type f -name "*.js" -not -path "./node_modules/*" -not -path "./dist/*" -exec dos2unix {} \;
-        echo "Conversión completada."
-        
+
     - name: Ejecutar ESLint con fix
       run: npm run lint:fix
-        
-    - name: Verificar sintaxis JavaScript
+
+    - name: Verificar sintaxis JS
       run: |
-        echo "Verificando sintaxis de archivos JavaScript..."
+        echo "Verificando sintaxis..."
         find . -name "*.js" -not -path "./node_modules/*" -not -path "./dist/*" -exec node -c {} \;
-        
+
     - name: Ejecutar ESLint
       run: npm run lint
-        
+
     - name: Verificar formato JSON
       run: |
-        echo "Verificando sintaxis de archivos JSON..."
         find . -name "*.json" -not -path "./node_modules/*" -not -path "./dist/*" -exec node -e "JSON.parse(require('fs').readFileSync('{}', 'utf8'))" \;
-        
-    - name: Verificar estructura de archivos
+
+    - name: Verificar estructura del proyecto
       run: |
-        echo "Verificando estructura del proyecto..."
         test -f "package.json" || exit 1
         test -f "main.js" || exit 1
         test -f "index.html" || exit 1
         test -d "js" || exit 1
         test -d "js/families" || exit 1
         test -d "js/utils" || exit 1
-        echo "✅ Estructura del proyecto correcta"
+        echo "✅ Estructura correcta"
 
-  # Job para construir en Linux
   build-linux:
     name: Build en Linux
     runs-on: ubuntu-latest
     needs: lint
     env:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    
+
     steps:
-    - name: Checkout código
-      uses: actions/checkout@v4
-      
-    - name: Configurar Node.js
-      uses: actions/setup-node@v4
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4
       with:
         node-version: '22.9.0'
         cache: 'npm'
-        
-    - name: Instalar dependencias
-      run: npm ci
-      
-    - name: Verificar que la aplicación inicia
-      run: |
-        echo "Verificando que la aplicación puede iniciarse..."
-        timeout 10s npm start || true
-        
-    - name: Construir aplicación
-      run: npm run dist
-      
-    - name: Verificar archivos generados
-      run: |
-        echo "Verificando archivos de build..."
-        ls -la dist/
-        
-    - name: Subir artefactos de Linux
-      uses: actions/upload-artifact@v4
+
+    - run: npm ci
+
+    - run: timeout 10s npm start || true
+
+    - run: npm run dist
+
+    - run: ls -la dist/
+
+    - uses: actions/upload-artifact@v4
       with:
         name: electron-app-linux
         path: dist/
         retention-days: 7
 
-  # Job para construir en Windows
   build-windows:
     name: Build en Windows
     runs-on: windows-latest
     needs: lint
     env:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    
+
     steps:
-    - name: Checkout código
-      uses: actions/checkout@v4
-      
-    - name: Configurar Node.js
-      uses: actions/setup-node@v4
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4
       with:
         node-version: '22.9.0'
         cache: 'npm'
-        
-    - name: Instalar dependencias
-      run: npm ci
-      
-    - name: Verificar que la aplicación inicia
-      run: |
-        echo "Verificando que la aplicación puede iniciarse..."
-        timeout 10s npm start || true
-        
-    - name: Construir aplicación
-      run: npm run dist
-      
-    - name: Verificar archivos generados
-      run: |
-        echo "Verificando archivos de build..."
-        dir dist\
-        
-    - name: Subir artefactos de Windows
-      uses: actions/upload-artifact@v4
+
+    - run: npm ci
+
+    - run: timeout 10s npm start || true
+
+    - run: npm run dist
+
+    - run: dir dist\
+
+    - uses: actions/upload-artifact@v4
       with:
         name: electron-app-windows
         path: dist/
         retention-days: 7
 
-  # Job para construir en macOS
   build-macos:
     name: Build en macOS
     runs-on: macos-latest
     needs: lint
     env:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    
+
     steps:
-    - name: Checkout código
-      uses: actions/checkout@v4
-      
-    - name: Configurar Node.js
-      uses: actions/setup-node@v4
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4
       with:
         node-version: '22.9.0'
         cache: 'npm'
-        
-    - name: Instalar dependencias
-      run: npm ci
-      
-    - name: Verificar que la aplicación inicia
-      run: |
-        echo "Verificando que la aplicación puede iniciarse..."
-        timeout 10s npm start || true
-        
-    - name: Construir aplicación
-      run: npm run dist
-      
-    - name: Verificar archivos generados
-      run: |
-        echo "Verificando archivos de build..."
-        ls -la dist/
-        
-    - name: Subir artefactos de macOS
-      uses: actions/upload-artifact@v4
+
+    - run: npm ci
+
+    - run: timeout 10s npm start || true
+
+    - run: npm run dist
+
+    - run: ls -la dist/
+
+    - uses: actions/upload-artifact@v4
       with:
         name: electron-app-macos
         path: dist/
         retention-days: 7
 
-  # Job para tests (opcional)
   test:
     name: Ejecutar tests
     runs-on: ubuntu-latest
     needs: lint
-    
+
     steps:
-    - name: Checkout código
-      uses: actions/checkout@v4
-      
-    - name: Configurar Node.js
-      uses: actions/setup-node@v4
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4
       with:
         node-version: '22.9.0'
         cache: 'npm'
-        
-    - name: Instalar dependencias
-      run: npm ci
-      
-    - name: Verificar scripts disponibles
-      run: |
-        echo "Scripts disponibles en package.json:"
-        npm run
-        
-    - name: Verificar que no hay errores de sintaxis en archivos principales
-      run: |
+
+    - run: npm ci
+
+    - run: |
         echo "Verificando archivos principales..."
         node -c main.js
         node -c server.js
         find js/ -name "*.js" -exec node -c {} \;
-        echo "✅ Todos los archivos JavaScript tienen sintaxis correcta"
+        echo "✅ Archivos OK"
 
-  # Job para crear release (solo en push a master)
   release:
     name: Crear Release
     runs-on: ubuntu-latest
     needs: [build-linux, build-windows, build-macos]
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    
+
     steps:
     - name: Checkout código
       uses: actions/checkout@v4
-      
-    - name: Descargar artefactos
+
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.9.0'
+
+    - name: Instalar dependencias
+      run: npm ci
+
+    - name: Leer versión desde package.json
+      id: version
+      run: echo "version=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+
+    - name: Crear ZIP del proyecto completo
+      run: |
+        mkdir -p artifacts
+        zip -r artifacts/project-source-v${{ steps.version.outputs.version }}.zip . \
+          -x "node_modules/**" ".git/**" "dist/**" "artifacts/**" ".github/**" "*.zip"
+
+    - name: Descargar artefactos de build
       uses: actions/download-artifact@v4
       with:
         path: artifacts
-        
+
     - name: Crear Release
       uses: softprops/action-gh-release@v1
       with:
+        tag_name: v${{ steps.version.outputs.version }}
+        name: Release v${{ steps.version.outputs.version }}
         files: |
           artifacts/electron-app-linux/**/*
           artifacts/electron-app-windows/**/*
           artifacts/electron-app-macos/**/*
-          # **/*
-          # !node_modules/**
-          # !dist/**
-          # !.git/**
-          # !.github/**
-          # !artifacts/**
-          # !builder-debug.yml
-        tag_name: v${{ github.run_number }}
-        name: Release v${{ github.run_number }}
+          artifacts/project-source-v${{ steps.version.outputs.version }}.zip
         body: |
           ## Generador de Tests Playwright
           
           ### Cambios en esta versión:
-          - Build automático en múltiples plataformas
-          - Verificaciones de sintaxis y estructura
-          - Tests de integración
-          
-          ### Plataformas soportadas:
-          - Linux
-          - Windows  
-          - macOS
+          - Build automático para Linux, Windows y macOS
+          - Verificación de sintaxis, estructura y pruebas básicas
           
           ### Archivos incluidos:
-          - **Aplicación Electron** para cada plataforma (Linux, Windows, macOS)
-          - **Código fuente completo** (main.js, js/, server.js, etc.)
-          - **Documentación** (README.md, CHANGELOG.md)
-          - **Configuración** (package.json, package-lock.json)
-          - **Licencia propietaria** (LICENSE)
-          - **Recursos** (icons/, index.html, index.css)
-          
-          ### Para usar esta versión:
-          1. Descarga los archivos de la plataforma que necesites
-          2. Para desarrollo: descarga el código fuente completo
-          3. Consulta CHANGELOG.md para ver los cambios específicos
+          - Aplicaciones Electron por plataforma
+          - Código fuente completo (comprimido)
+          - Documentación, configuración y recursos
+
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
