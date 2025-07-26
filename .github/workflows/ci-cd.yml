@@ -232,6 +232,52 @@ jobs:
       with:
         path: artifacts
         
+    - name: Obtener versión del package.json
+      id: get_version
+      run: |
+        VERSION=$(node -p "require('./package.json').version")
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Versión detectada: $VERSION"
+        
+    - name: Extraer descripción del CHANGELOG.md
+      id: get_changelog
+      run: |
+        # Buscar la sección de la versión actual en CHANGELOG.md
+        VERSION="${{ steps.get_version.outputs.version }}"
+        echo "Buscando cambios para versión: $VERSION"
+        
+        # Extraer la sección completa de la versión actual
+        CHANGELOG_SECTION=$(awk -v version="$VERSION" '
+          /^## \[' version '\]/ {
+            in_section = 1
+            print
+            next
+          }
+          /^## \[/ && in_section {
+            in_section = 0
+            exit
+          }
+          in_section {
+            print
+          }
+        ' CHANGELOG.md)
+        
+        if [ -z "$CHANGELOG_SECTION" ]; then
+          echo "⚠️ No se encontró sección para versión $VERSION en CHANGELOG.md"
+          CHANGELOG_SECTION="## Cambios en esta versión\n\n- Build automático en múltiples plataformas\n- Verificaciones de sintaxis y estructura\n- Tests de integración"
+        fi
+        
+        # Escapar para GitHub Actions
+        CHANGELOG_SECTION="${CHANGELOG_SECTION//'%'/'%25'}"
+        CHANGELOG_SECTION="${CHANGELOG_SECTION//$'\n'/'%0A'}"
+        CHANGELOG_SECTION="${CHANGELOG_SECTION//$'\r'/'%0D'}"
+        
+        echo "changelog<<EOF" >> $GITHUB_OUTPUT
+        echo "$CHANGELOG_SECTION" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+        
+        echo "Descripción extraída del CHANGELOG.md"
+        
     - name: Crear Release
       uses: softprops/action-gh-release@v1
       with:
@@ -239,16 +285,19 @@ jobs:
           artifacts/electron-app-linux/**/*
           artifacts/electron-app-windows/**/*
           artifacts/electron-app-macos/**/*
-          
-        tag_name: v${{ github.run_number }}
-        name: Release v${{ github.run_number }}
+          **/*
+          !node_modules/**
+          !dist/**
+          !.git/**
+          !.github/**
+          !artifacts/**
+          !builder-debug.yml
+        tag_name: v${{ steps.get_version.outputs.version }}
+        name: Release v${{ steps.get_version.outputs.version }}
         body: |
-          ## Generador de Tests Playwright
+          ## Generador de Tests Playwright v${{ steps.get_version.outputs.version }}
           
-          ### Cambios en esta versión:
-          - Build automático en múltiples plataformas
-          - Verificaciones de sintaxis y estructura
-          - Tests de integración
+          ${{ steps.get_changelog.outputs.changelog }}
           
           ### Plataformas soportadas:
           - Linux
