@@ -260,11 +260,11 @@ jobs:
         CHANGELOG_SECTION="${CHANGELOG_SECTION//$'\n'/'%0A'}"
         CHANGELOG_SECTION="${CHANGELOG_SECTION//$'\r'/'%0D'}"
 
-        echo "changelog<<EOF" >> $GITHUB_OUTPUT
-        echo "$CHANGELOG_SECTION" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
-
-        echo "Descripción extraída del CHANGELOG.md"
+        {
+          echo "changelog<<EOF"
+          echo "$CHANGELOG_SECTION"
+          echo "EOF"
+        } >> "$GITHUB_OUTPUT"
 
     - name: Crear Release
       uses: softprops/action-gh-release@v1
