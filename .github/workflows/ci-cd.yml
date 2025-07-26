@@ -187,19 +187,7 @@ jobs:
           artifacts/electron-app-linux/**/*
           artifacts/electron-app-windows/**/*
           artifacts/electron-app-macos/**/*
-          artifacts/project-source-v${{ steps.version.outputs.version }}.zip
-        body: |
-          ## Generador de Tests Playwright
-
-          ### Cambios:
-          - Build automático para Linux, Windows, macOS
-          - Verificación de sintaxis y estructura
-          - Tests básicos
-
-          ### Archivos:
-          - Aplicaciones Electron (.zip/.exe)
-          - Código fuente completo
-          - Documentación y configuración
-
+          **/*
+          
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
