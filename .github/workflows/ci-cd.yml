@@ -181,12 +181,8 @@ jobs:
     - name: Leer CHANGELOG.md para body del release
       id: changelog
       run: |
-        # Lee el contenido de CHANGELOG.md (o una parte si quieres)
-        # Aquí lees TODO el archivo
-        cat CHANGELOG.md > changelog.txt
-        # Luego lo pasamos a output multilinea
         echo "body<<EOF" >> $GITHUB_OUTPUT
-        cat changelog.txt >> $GITHUB_OUTPUT
+        cat CHANGELOG.md >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
 
     - name: Crear Release
