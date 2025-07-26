@@ -193,4 +193,3 @@ jobs:
           artifacts/project-source-v${{ steps.version.outputs.version }}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
