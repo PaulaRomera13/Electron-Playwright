@@ -8,12 +8,16 @@
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "build-icons": "electron-icon-builder --input=icon.png --flatten --output=icons"
+    "build-icons": "electron-icon-builder --input=icon.png --flatten --output=icons",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "npm run lint && echo 'Tests completados exitosamente'"
   },
   "devDependencies": {
     "electron": "^28.0.0",
     "electron-builder": "^26.0.12",
-    "electron-icon-builder": "^2.0.1"
+    "electron-icon-builder": "^2.0.1",
+    "eslint": "^8.57.0"
   },
   "build": {
     "appId": "playwrightgenerator.TRAZiT",

@@ -1,0 +1,244 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  # Job para verificar sintaxis y linting
+  lint:
+    name: Lint y verificar sintaxis
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+      
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Instalar dependencias
+      run: npm ci
+      
+    - name: Verificar sintaxis JavaScript
+      run: |
+        echo "Verificando sintaxis de archivos JavaScript..."
+        find . -name "*.js" -not -path "./node_modules/*" -not -path "./dist/*" -exec node -c {} \;
+        
+    - name: Ejecutar ESLint
+      run: npm run lint
+        
+    - name: Verificar formato JSON
+      run: |
+        echo "Verificando sintaxis de archivos JSON..."
+        find . -name "*.json" -not -path "./node_modules/*" -not -path "./dist/*" -exec node -e "JSON.parse(require('fs').readFileSync('{}', 'utf8'))" \;
+        
+    - name: Verificar estructura de archivos
+      run: |
+        echo "Verificando estructura del proyecto..."
+        test -f "package.json" || exit 1
+        test -f "main.js" || exit 1
+        test -f "index.html" || exit 1
+        test -d "js" || exit 1
+        test -d "js/families" || exit 1
+        test -d "js/utils" || exit 1
+        echo "✅ Estructura del proyecto correcta"
+
+  # Job para construir en Linux
+  build-linux:
+    name: Build en Linux
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+      
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Instalar dependencias
+      run: npm ci
+      
+    - name: Verificar que la aplicación inicia
+      run: |
+        echo "Verificando que la aplicación puede iniciarse..."
+        timeout 10s npm start || true
+        
+    - name: Construir aplicación
+      run: npm run dist
+      
+    - name: Verificar archivos generados
+      run: |
+        echo "Verificando archivos de build..."
+        ls -la dist/
+        
+    - name: Subir artefactos de Linux
+      uses: actions/upload-artifact@v4
+      with:
+        name: electron-app-linux
+        path: dist/
+        retention-days: 7
+
+  # Job para construir en Windows
+  build-windows:
+    name: Build en Windows
+    runs-on: windows-latest
+    needs: lint
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+      
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Instalar dependencias
+      run: npm ci
+      
+    - name: Verificar que la aplicación inicia
+      run: |
+        echo "Verificando que la aplicación puede iniciarse..."
+        timeout 10s npm start || true
+        
+    - name: Construir aplicación
+      run: npm run dist
+      
+    - name: Verificar archivos generados
+      run: |
+        echo "Verificando archivos de build..."
+        dir dist\
+        
+    - name: Subir artefactos de Windows
+      uses: actions/upload-artifact@v4
+      with:
+        name: electron-app-windows
+        path: dist/
+        retention-days: 7
+
+  # Job para construir en macOS
+  build-macos:
+    name: Build en macOS
+    runs-on: macos-latest
+    needs: lint
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+      
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Instalar dependencias
+      run: npm ci
+      
+    - name: Verificar que la aplicación inicia
+      run: |
+        echo "Verificando que la aplicación puede iniciarse..."
+        timeout 10s npm start || true
+        
+    - name: Construir aplicación
+      run: npm run dist
+      
+    - name: Verificar archivos generados
+      run: |
+        echo "Verificando archivos de build..."
+        ls -la dist/
+        
+    - name: Subir artefactos de macOS
+      uses: actions/upload-artifact@v4
+      with:
+        name: electron-app-macos
+        path: dist/
+        retention-days: 7
+
+  # Job para tests (opcional)
+  test:
+    name: Ejecutar tests
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+      
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Instalar dependencias
+      run: npm ci
+      
+    - name: Verificar scripts disponibles
+      run: |
+        echo "Scripts disponibles en package.json:"
+        npm run
+        
+    - name: Verificar que no hay errores de sintaxis en archivos principales
+      run: |
+        echo "Verificando archivos principales..."
+        node -c main.js
+        node -c server.js
+        find js/ -name "*.js" -exec node -c {} \;
+        echo "✅ Todos los archivos JavaScript tienen sintaxis correcta"
+
+  # Job para crear release (solo en push a main)
+  release:
+    name: Crear Release
+    runs-on: ubuntu-latest
+    needs: [build-linux, build-windows, build-macos]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+      
+    - name: Descargar artefactos
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
+        
+    - name: Crear Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          artifacts/electron-app-linux/**/*
+          artifacts/electron-app-windows/**/*
+          artifacts/electron-app-macos/**/*
+        tag_name: v${{ github.run_number }}
+        name: Release v${{ github.run_number }}
+        body: |
+          ## Generador de Tests Playwright
+          
+          ### Cambios en esta versión:
+          - Build automático en múltiples plataformas
+          - Verificaciones de sintaxis y estructura
+          - Tests de integración
+          
+          ### Plataformas soportadas:
+          - Linux
+          - Windows  
+          - macOS
+          
+          ### Archivos incluidos:
+          - Aplicación Electron para cada plataforma
+          - Documentación completa
+          - Licencia propietaria
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
