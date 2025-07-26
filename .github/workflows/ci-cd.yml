@@ -239,13 +239,7 @@ jobs:
           artifacts/electron-app-linux/**/*
           artifacts/electron-app-windows/**/*
           artifacts/electron-app-macos/**/*
-          **/*
-          !node_modules/**
-          !dist/**
-          !.git/**
-          !.github/**
-          !artifacts/**
-          !builder-debug.yml
+          
         tag_name: v${{ github.run_number }}
         name: Release v${{ github.run_number }}
         body: |
