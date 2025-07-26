@@ -254,12 +254,12 @@ export class JsonUtils {
     }
     const jsonText = JSON.stringify(jsonObj, null, 2);
     jsonEditorContainer.innerHTML = `
-            <h4 class="json-editor-title"><i class=\"fas fa-edit\"></i> Editor JSON</h4>
+            <h4 class="json-editor-title"><i class="fas fa-edit"></i> Editor JSON</h4>
             <div class="json-editor-area" style="position:relative;">
-              <textarea id=\"editableJson\">${jsonText}</textarea>
-              <div class=\"json-actions\">
-                  <button id=\"cancelJsonEdit\"><i class=\"fas fa-times\"></i> Cancelar</button>
-                  <button id=\"saveJsonChanges\" class=\"primary\"><i class=\"fas fa-save\"></i> Guardar Cambios</button>
+              <textarea id="editableJson">${jsonText}</textarea>
+              <div class="json-actions">
+                  <button id="cancelJsonEdit"><i class="fas fa-times"></i> Cancelar</button>
+                  <button id="saveJsonChanges" class="primary"><i class="fas fa-save"></i> Guardar Cambios</button>
               </div>
             </div>
         `
