@@ -250,4 +250,4 @@ jobs:
           - Documentación completa
           - Licencia propietaria
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        GH_TOKEN: ${{ secrets.GH_TOKEN }} 
