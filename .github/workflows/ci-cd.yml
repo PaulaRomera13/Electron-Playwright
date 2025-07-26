@@ -236,10 +236,10 @@ jobs:
       id: get_version
       run: |
         VERSION=$(node -p "require('./package.json').version")
-        echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "Versión detectada: $VERSION"
-        
-         - name: Extraer descripción del CHANGELOG.md
+                 echo "version=$VERSION" >> $GITHUB_OUTPUT
+         echo "Versión detectada: $VERSION"
+         
+     - name: Extraer descripción del CHANGELOG.md
        id: get_changelog
        run: |
          # Buscar la sección de la versión actual en CHANGELOG.md
