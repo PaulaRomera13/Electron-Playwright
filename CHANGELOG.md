@@ -20,13 +20,15 @@
 
 - **Generadores de tests por familias de acción**  
   Implementados como módulos independientes, cada uno con su propio formulario y lógica de generación:
-  - **CommonDialog**: Para acciones que requieren un diálogo con campos configurables. Permite incluir/excluir campos, elegir idioma y personalizar notificaciones.
+  - **Dialog**: Para acciones que requieren un diálogo con campos configurables. Permite incluir/excluir campos, elegir idioma y personalizar notificaciones.
+  - **DialogWithColumnSelection**: Para diálogos que incluyen selección de columnas, maneja tablas con columnas seleccionables y filtros avanzados.
   - **NoDialog**: Para acciones directas que no requieren diálogo. Permite configurar el proceso, pestaña, botón, elemento a seleccionar, posiciones y opciones avanzadas como flechas y botones ocultos.
   - **Audit**: Para acciones de auditoría, con campos y lógica específica para este tipo de test.
   - **Export**: Para acciones de exportación de datos, con configuración de ruta de descarga, selección de columnas y validación de la descarga.
-  - **Open Attachment**: Para acciones que abren adjuntos, con campos específicos para URL, posición y botones de confirmación.
-  - **Remove Attachment**: Para acciones que eliminan adjuntos, permitiendo seleccionar el adjunto y su posición, así como opciones avanzadas.
-  - **Add AWS**: Nuevo generador para acciones de subida de archivos a AWS, con campos específicos para ruta de archivo, input de subida y configuraciones avanzadas.
+  - **OpenAttachment**: Para acciones que abren adjuntos, con campos específicos para URL, posición y botones de confirmación.
+  - **RemoveAttachment**: Para acciones que eliminan adjuntos, permitiendo seleccionar el adjunto y su posición, así como opciones avanzadas.
+  - **AWS**: Para acciones de subida de archivos a AWS, con campos específicos para ruta de archivo, input de subida y configuraciones avanzadas.
+  - **ReactiveObjectDialog**: Para diálogos con objetos reactivos que cambian dinámicamente, maneja formularios complejos con validaciones dinámicas.
 
 - **Soporte para componente Tabs y utilidades asociadas**  
   - Añadido soporte completo para componentes de tipo Tabs en todos los generadores de tests.
@@ -37,6 +39,7 @@
 
 - **Utilidades y helpers**  
   - Utilidades para manejo de campos (`fieldUtils.js`) y JSON (`jsonUtils.js`).
+  - Utilidades para manejo de pestañas (`tabUtils.js`) y objetos por pestañas (`objectByTabsUtils.js`).
   - Plantillas base para los datos de test generados, adaptadas a distintos modos (desktop, móvil, tablet).
 
 - **Interfaz de usuario**  
@@ -44,9 +47,18 @@
   - Iconografía y botones contextuales.
   - Modal para cargar/actualizar el modelo JSON desde la interfaz.
 
-- **Soporte para Single View**  
-  Actualmente, todas las funcionalidades están disponibles para el componente `Single View`, `Tabs` y `ObjectByTabs`.
+- **Soporte para componentes de vista**  
+  Actualmente, todas las funcionalidades están disponibles para los componentes:
+  - **Single View**: Vista simple con formularios básicos
+  - **Tabs**: Vista con pestañas para organizar contenido
+  - **ObjectByTabs**: Vista con objetos complejos organizados por pestañas, con utilidades específicas en `objectByTabsUtils.js`
 
 - **Actions y Row Buttons**
   Lista de las acciones de actions y de row_buttons.
+
+- **Arquitectura de generadores**
+  - Clase base `BaseTestGenerator` que proporciona funcionalidades comunes
+  - 9 generadores específicos que extienden de la clase base
+  - Patrón de herencia para mantener consistencia en todos los tests
+  - Utilidades compartidas para procesamiento de datos y validaciones
   
