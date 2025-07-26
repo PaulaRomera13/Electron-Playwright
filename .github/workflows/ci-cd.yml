@@ -166,7 +166,9 @@ jobs:
 
       - name: Leer versión desde package.json
         id: version
-        run: echo "version=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Crear tag de versión
         run: |
