@@ -209,7 +209,7 @@ export class JsonUtils {
       const testData = JSON.parse(jsonData.testDataGame)
 
       // Función para obtener el valor en la ruta especificada
-      function getValueByPath(obj, path) {
+      const getValueByPath = (obj, path) => {
         return path.split(".").reduce((o, p) => o && o[p], obj)
       }
 
@@ -250,7 +250,11 @@ export class JsonUtils {
     // Obtener el objeto real para mostrarlo bonito
     let jsonObj = this.app.getOriginalTestData();
     if (typeof jsonObj === 'string') {
-      try { jsonObj = JSON.parse(jsonObj); } catch(e) {}
+      try { 
+        jsonObj = JSON.parse(jsonObj); 
+      } catch(e) {
+        console.warn('Error parsing JSON:', e);
+      }
     }
     const jsonText = JSON.stringify(jsonObj, null, 2);
     jsonEditorContainer.innerHTML = `
