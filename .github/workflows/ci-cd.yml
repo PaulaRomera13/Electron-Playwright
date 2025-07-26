@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [master]
+    branches: [ master ]
   pull_request:
-    branches: [master]
+    branches: [ master ]
 
 permissions:
   contents: write
@@ -62,12 +62,10 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '22.9.0'
           cache: 'npm'
-
       - run: npm ci
       - run: timeout 10s npm start || true
       - run: npm run dist
@@ -79,8 +77,8 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: linux-build
-          path: electron-app-linux-v$VERSION.zip
+          name: electron-app-linux
+          path: electron-app-linux-v*.zip
 
   build-windows:
     name: Build en Windows
@@ -90,12 +88,10 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '22.9.0'
           cache: 'npm'
-
       - run: npm ci
       - run: timeout 10s npm start || true
       - run: npm run dist
@@ -108,8 +104,8 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: windows-build
-          path: electron-app-windows-v$version.zip
+          name: electron-app-windows
+          path: electron-app-windows-v*.zip
 
   build-macos:
     name: Build en macOS
@@ -119,12 +115,10 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '22.9.0'
           cache: 'npm'
-
       - run: npm ci
       - run: timeout 10s npm start || true
       - run: npm run dist
@@ -136,8 +130,8 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: macos-build
-          path: electron-app-macos-v$VERSION.zip
+          name: electron-app-macos
+          path: electron-app-macos-v*.zip
 
   test:
     name: Ejecutar tests
@@ -172,11 +166,10 @@ jobs:
 
       - name: Leer versión desde package.json
         id: version
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
-      - run: |
+      - name: Crear tag de versión
+        run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git tag -d v${{ steps.version.outputs.version }} || true
@@ -184,27 +177,24 @@ jobs:
           git tag v${{ steps.version.outputs.version }}
           git push origin v${{ steps.version.outputs.version }}
 
-      - name: Crear ZIP del código fuente
+      - name: Crear ZIP del proyecto completo
         run: |
           mkdir -p release-assets
           VERSION=${{ steps.version.outputs.version }}
           zip -r release-assets/project-source-v$VERSION.zip . \
             -x "node_modules/**" ".git/**" "dist/**" "release-assets/**" ".github/**" "*.zip"
 
-      - name: Descargar artifacts de build
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           path: release-assets
-          pattern: *-build
-          merge-multiple: true
 
-      - name: Preparar archivos para release
+      - name: Mover builds a la raíz
         run: |
-          cd release-assets
-          mv linux-build/electron-app-linux-v*.zip .
-          mv windows-build/electron-app-windows-v*.zip .
-          mv macos-build/electron-app-macos-v*.zip .
-          rm -r linux-build windows-build macos-build
+          VERSION=${{ steps.version.outputs.version }}
+          mv release-assets/electron-app-linux/electron-app-linux-v$VERSION.zip release-assets/
+          mv release-assets/electron-app-windows/electron-app-windows-v$VERSION.zip release-assets/
+          mv release-assets/electron-app-macos/electron-app-macos-v$VERSION.zip release-assets/
+          rm -rf release-assets/electron-app-*
 
       - name: Leer CHANGELOG.md para body del release
         id: changelog
