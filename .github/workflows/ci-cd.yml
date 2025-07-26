@@ -166,7 +166,7 @@ jobs:
 
       - name: Leer versión desde package.json
         id: version
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+        run: echo "version=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
 
       - name: Crear tag de versión
         run: |
@@ -184,17 +184,12 @@ jobs:
           zip -r release-assets/project-source-v$VERSION.zip . \
             -x "node_modules/**" ".git/**" "dist/**" "release-assets/**" ".github/**" "*.zip"
 
-      - uses: actions/download-artifact@v4
+      - name: Descargar todos los builds
+        uses: actions/download-artifact@v4
         with:
+          pattern: electron-app-*
           path: release-assets
-
-      - name: Mover builds a la raíz
-        run: |
-          VERSION=${{ steps.version.outputs.version }}
-          mv release-assets/electron-app-linux/electron-app-linux-v$VERSION.zip release-assets/
-          mv release-assets/electron-app-windows/electron-app-windows-v$VERSION.zip release-assets/
-          mv release-assets/electron-app-macos/electron-app-macos-v$VERSION.zip release-assets/
-          rm -rf release-assets/electron-app-*
+          merge-multiple: true
 
       - name: Leer CHANGELOG.md para body del release
         id: changelog
