@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Configuración básica del documento HTML -->
+    <meta charset="UTF-8">
+    <title>Playwright</title>
+    <!-- Importación de iconos de Font Awesome para la interfaz -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Importación de estilos CSS personalizados -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <!-- Contenedor principal de la aplicación -->
+    <div class="container">
+        <!-- Cabecera de la aplicación con título y descripción -->
+        <div class="header">
+            <h1><i class="fas fa-boxes"></i>Playwright</h1>
+            <p>Sirve para crear test de playwright de manera más rápida y fácil</p>
+            <button id="toggleModelJsonForm" class="toggle-button modeljson-header-btn" type="button">Actualizar modeloJson</button>
+        </div>
+
+        <!-- Modal para pegar modelJson -->
+        <div class="modeljson-modal-overlay" id="modeljsonUploadContainer" style="display: none;">
+            <div class="modeljson-modal">
+                <div class="modeljson-modal-header">
+                    <span class="modeljson-modal-title"><i class="fas fa-database"></i> Actualizar modeloJson</span>
+                    <button class="modeljson-modal-close" id="closeModelJsonModal" title="Cerrar">&times;</button>
+                </div>
+                <form id="uploadForm" class="modeljson-form">
+                    <label for="modelJsonEditor" style="font-weight: 500;">Pega aquí el nuevo modelJson (JSON):</label><br>
+                    <div class="json-toolbar" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                        <button type="button" id="formatJsonBtn" class="json-toolbar-btn" title="Formatear"><i class="fas fa-align-left"></i></button>
+                        <button type="button" id="minifyJsonBtn" class="json-toolbar-btn" title="Comprimir"><i class="fas fa-compress"></i></button>
+                        <button type="button" id="searchJsonBtn" class="json-toolbar-btn" title="Buscar"><i class="fas fa-search"></i></button>
+                        <div id="jsonSearchBox" style="display:none; align-items: center; gap: 4px;">
+                            <input type="text" id="jsonSearchInput" placeholder="Buscar en JSON..." style="width: 160px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;" />
+                            <span id="jsonSearchCount" style="font-size: 13px; color: #555;"></span>
+                            <button type="button" id="jsonSearchPrev" class="json-toolbar-btn" title="Anterior"><i class="fas fa-arrow-up"></i></button>
+                            <button type="button" id="jsonSearchNext" class="json-toolbar-btn" title="Siguiente"><i class="fas fa-arrow-down"></i></button>
+                            <button type="button" id="jsonSearchClose" class="json-toolbar-btn" title="Cerrar búsqueda"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <textarea id="modelJsonEditor" style="height: 300px; width: 100%; border: 1px solid #ccc; border-radius: 4px; font-family: monospace;"></textarea>
+                    <button type="submit" class="enable-btn" style="margin-top: 10px;">Guardar modeloJson</button>
+                </form>
+                <div id="uploadStatus" style="margin-top: 10px; color: green;"></div>
+            </div>
+        </div>
+
+        <!-- Contenido principal dividido en sidebar y detalles -->
+        <div class="main-content">
+            <!-- Barra lateral con configuración y lista de acciones -->
+            <div class="sidebar">
+                <!-- Sección de configuración principal -->
+                <div class="sidebar-section">
+                    <h2><i class="fas fa-cog"></i> Main Configuration</h2>
+                    <!-- Elementos de configuración que se llenan dinámicamente -->
+                    <div class="config-item">
+                        <div class="config-name">Componente</div>
+                        <div class="config-value" id="config-component">Loading...</div>
+                    </div>
+                    <div class="config-item">
+                        <div class="config-name">Ocultar panel izquierdo</div>
+                        <div class="config-value" id="config-hideLeftPane">Loading...</div>
+                    </div>
+                    <div class="config-item">
+                        <div class="config-name">Tiene componente propio</div>
+                        <div class="config-value" id="config-hasOwnComponent">Loading...</div>
+                    </div>
+                    <!-- Contenedor colapsable para detalles de view query -->
+                    <div class="collapsible" id="view-query-details">
+                        <div class="collapsible-content">
+                            <!-- Grid que se llena dinámicamente con propiedades de view query -->
+                            <div class="property-grid" id="view-query-grid"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de acciones disponibles -->
+                <div class="sidebar-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h2><i class="fas fa-list"></i> Acciones disponibles</h2>
+                        <!-- Botón de exportación que se muestra solo si está habilitado -->
+                        <button id="exportButton" class="export-button" style="display: none;">
+                            <i class="fas fa-download"></i> 
+                        </button>
+                    </div>
+                    <!-- Contenedor que se llena dinámicamente con la lista de acciones -->
+                    <div class="actions-list" id="actions-container"></div>
+                </div>
+
+                <!-- Sección de acciones disponibles Row Buttons -->
+                <div class="sidebar-section">
+                    <h2><i class="fas fa-list"></i>Row Buttons: Acciones disponibles</h2>
+                    <div class="actions-list" id="row-buttons-container"></div>
+                </div>
+            </div>
+
+            <!-- Panel de detalles de la acción seleccionada -->
+            <div class="action-details">
+                <div id="details-container">
+                    <!-- Mensaje por defecto cuando no hay acción seleccionada -->
+                    <div class="no-selection">
+                        <p><i class="fas fa-hand-point-left"></i> Selecciona una acción de la lista para ver los detalles</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Importación del script principal de la aplicación como módulo ES6 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

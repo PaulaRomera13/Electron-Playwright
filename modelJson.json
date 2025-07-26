@@ -1,0 +1,1080 @@
+{
+  "component": "ObjectByTabs",
+  "hasOwnComponent": true,
+  "showTitleOnTop": true,
+  "title": {
+    "fix_text_en": "Opportunities",
+    "fix_text_es": "Oportunidades",
+    "name": ""
+  },
+  "viewQuery": {
+    "actionName": "ACTIVE_PROPOSALS",
+    "notUseGrid": true,
+    "button": {
+      "icon": "refresh",
+      "title": {
+        "label_en": "Reload",
+        "label_es": "Recargar"
+      },
+      "requiresGridItemSelected": false
+    },
+    "endPointParams": [
+      {
+        "argumentName": "addProposalOffers",
+        "value": true
+      },
+      {
+        "argumentName": "addProposalOfferItems",
+        "value": true
+      },
+      {
+        "argumentName": "whereFieldsName",
+        "value": "decision is null"
+      },
+      {
+        "argumentName": "whereFieldsValue",
+        "value": "x*STRING"
+      },
+      {
+        "argumentName": "name",
+        "filterElement": "filtertext1",
+        "addToWhereFieldNameAndValue": true
+      },
+      {
+        "argumentName": "created_on",
+        "filterElement": "filterdaterange1dateStart",
+        "addToWhereFieldNameAndValue": true,
+        "fieldType": "DATETIME"
+      },
+      {
+        "argumentName": "created_on",
+        "filterElement": "filterdaterange1dateEnd",
+        "addToWhereFieldNameAndValue": true,
+        "fieldType": "DATETIME"
+      }
+    ]
+  },
+  "filter_button": {
+    "label_en": "Search",
+    "label_es": "Buscar"
+  },
+  "filter": [
+    {
+      "filterdaterange1": {
+        "label_en": "Range",
+        "label_es": "Rango",
+        "dateStart": {
+          "label_en": "Opportunities Start Date",
+          "label_es": "Fecha de Inicio de Oportunidad",
+          "default_value": ""
+        },
+        "dateEnd": {
+          "label_en": "Opportunities End Date",
+          "label_es": "Fecha Fin de Oportunidad",
+          "default_value": ""
+        }
+      }
+    },
+    {
+      "filtertext1": {
+        "label_en": "Opportunities",
+        "label_es": "Oportunidades",
+        "fixValue": ""
+      }
+    }
+  ],
+  "filterResultDetail": {
+    "type": "list",
+    "detail": [
+      {
+        "field": "name"
+      }
+    ]
+  },
+  "left_panel": {
+    "numMainButtons": "ALL",
+    "actions": [
+      {
+        "actionName": "NEW_PROPOSAL",
+        "requiresDialog": true,
+        "endPointParams": [
+          {
+            "argumentName": "proposalName",
+            "element": "text1",
+            "defaultValue": ""
+          },
+          {
+            "argumentName": "customerName",
+            "element": "list1",
+            "defaultValue": ""
+          }
+        ],
+        "button": {
+          "icon": "create_new_folder",
+          "title": {
+            "label_en": "New Opportunity",
+            "label_es": "Nueva Oportunidad"
+          },
+          "requiresGridItemSelected": false
+        },
+        "dialogInfo": {
+          "name": "genericDialog",
+          "fields": [
+            {
+              "text1": {
+                "label_en": "New Opportunity Name",
+                "label_es": "Nombre para la nueva oportunidad"
+              }
+            },
+            {
+              "list1": {
+                "label_en": "Customer",
+                "label_es": "Clientes",
+                "items": [
+                  {
+                    "keyName": "TCM",
+                    "keyValue_en": "TCM",
+                    "keyValue_es": "TCM"
+                  },
+                  {
+                    "keyName": "TRAZiT",
+                    "keyValue_en": "TRAZiT",
+                    "keyValue_es": "TRAZiT"
+                  },
+                  {
+                    "keyName": "OTHERS",
+                    "keyValue_en": "Others",
+                    "keyValue_es": "Otros"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "tabs": [
+    {
+      "tabLabel_en": "Opportunities",
+      "tabLabel_es": "Oportunidades",
+      "view": "Opportunities",
+      "view_definition": [
+        {
+          "type": "reportTitle",
+          "title": {
+            "label_en": "My Opportunities",
+            "label_es": "Mis Oportunidades"
+          }
+        },
+        {
+          "type": "buttonsOnly",
+          "actions": [
+            {
+              "actionName": "REOPEN_PROPOSAL",
+              "endPointParams": [
+                {
+                  "argumentName": "proposalName",
+                  "selObjectPropertyName": "name"
+                }
+              ],
+              "button": {
+                "icon": "alarm_add",
+                "title": {
+                  "label_en": "Reopen an Opportunity",
+                  "label_es": "Reabrir una Oportunidad"
+                },
+                "requiresGridItemSelected": false
+              },
+              "requiresDialog": true,
+              "dialogInfo": {
+                "name": "reactivateObjectDialog",
+                "fieldsObject": {
+                  "queryNumDays": {
+                    "label_en": "Number of Days",
+                    "label_es": "Número de Días",
+                    "defaultFixValue": 5
+                  },
+                  "objectName": {
+                    "label_en": "Opportunity to reopen",
+                    "label_es": "Reabrir una oportunidad"
+                  }
+                },
+                "listDefinition": {
+                  "keyFldName": "name",
+                  "eachEntryTextGenerator": [
+                    {
+                      "value": "Proposal: ",
+                      "type": "fix"
+                    },
+                    {
+                      "value": "name",
+                      "type": "field"
+                    }
+                  ]
+                },
+                "viewQuery": {
+                  "actionName": "CLOSED_PROPOSALS_LAST_N_DAYS",
+                  "endPoint": "/moduleproposals/ProposalsAPIqueries",
+                  "endPointParams": [
+                    {
+                      "argumentName": "numDays",
+                      "element": "queryNumDays",
+                      "zzzfixValue": 7
+                    }
+                  ]
+                },
+                "action": []
+              }
+            }
+          ]
+        },
+        {
+          "type": "cardSomeElementsSingleObject",
+          "endPointResponseArray": [
+            "ROOT"
+          ],
+          "num_columns": 3,
+          "add_border": true,
+          "fieldsToDisplay": [
+            {
+              "name": "name",
+              "label_en": "Name",
+              "label_es": "Nombre"
+            },
+            {
+              "name": "customer",
+              "label_en": "Customer",
+              "label_es": "Cliente"
+            },
+            {
+              "name": "created_on",
+              "label_en": "Created On",
+              "label_es": "Creado en"
+            },
+            {
+              "name": "date",
+              "label_en": "Date",
+              "label_es": "Fecha"
+            },
+            {
+              "name": "notes",
+              "label_en": "Notes",
+              "label_es": "Notas",
+              "editable": true,
+              "action": {
+                "actionName": "UPDATE_PROPOSAL",
+                "keepDialogOpen": true,
+                "requiresDialog": false,
+                "endPointParams": [
+                  {
+                    "argumentName": "proposalName",
+                    "selObjectPropertyName": "name"
+                  },
+                  {
+                    "selObjectPropertyName": "_tempValue",
+                    "argumentName": "notes",
+                    "addToFieldNameAndValue": true,
+                    "fieldType": "STRING"
+                  }
+                ],
+                "notGetViewData": true
+              }
+            },
+            {
+              "name": "is_locked",
+              "label_en": "Locked",
+              "label_es": "Bloqueado",
+              "is_icon": true,
+              "iconRules": [
+                {
+                  "conditions": [
+                    {
+                      "field": "is_locked",
+                      "operator": "EQUALS",
+                      "value": "true"
+                    }
+                  ],
+                  "icon": "lock",
+                  "iconSource": "material",
+                  "color": "red"
+                },
+                {
+                  "conditions": [
+                    {
+                      "field": "is_locked",
+                      "operator": "EQUALS",
+                      "value": "false"
+                    }
+                  ],
+                  "icon": "lock_open",
+                  "iconSource": "material",
+                  "color": "green"
+                },
+                {
+                  "conditions": [
+                    {
+                      "field": "is_locked",
+                      "operator": "EQUALS",
+                      "value": ""
+                    }
+                  ],
+                  "icon": "null.png",
+                  "iconSource": "local",
+                  "color": ""
+                },
+                {
+                  "conditions": [
+                    {
+                      "field": "is_locked",
+                      "operator": "EQUALS",
+                      "value": "null"
+                    }
+                  ],
+                  "icon": "null.png",
+                  "iconSource": "local",
+                  "color": ""
+                }
+              ]
+            },
+            {
+              "name": "decision",
+              "label_en": "Decision",
+              "label_es": "Decisión",
+              "is_icon": true,
+              "create_icon": true,
+              "iconRules": [
+                {
+                  "conditions": [
+                    {
+                      "field": "decision",
+                      "operator": "EQUALS",
+                      "value": "REJECTED"
+                    }
+                  ],
+                  "iconText": "REJECTED",
+                  "color": "#red",
+                  "fontSize": 42,
+                  "iconWidth": 100,
+                  "iconHeight": 100
+                },
+                {
+                  "name": "decision",
+                  "label_en": "Decision",
+                  "label_es": "Decisión",
+                  "is_icon": true,
+                  "create_icon": true,
+                  "iconRules": [
+                    {
+                      "conditions": [
+                        {
+                          "field": "decision",
+                          "operator": "EQUALS",
+                          "value": "REJECTED"
+                        }
+                      ],
+                      "iconText": "REJECTED",
+                      "color": "#red",
+                      "fontSize": 42,
+                      "iconWidth": 100,
+                      "iconHeight": 100
+                    },
+                    {
+                      "conditions": [
+                        {
+                          "field": "decision",
+                          "operator": "EQUALS",
+                          "value": "APPROVED"
+                        }
+                      ],
+                      "iconText": "APPROVED",
+                      "color": "#green",
+                      "fontSize": 42,
+                      "iconWidth": 100,
+                      "iconHeight": 100
+                    }
+                  ]
+                }
+              ],
+              "actions": [
+                {
+                  "actionName": "CLOSE_PROPOSAL",
+                  "endPointParams": [
+                    {
+                      "argumentName": "proposalName",
+                      "selObjectPropertyName": "name"
+                    }
+                  ],
+                  "requiresDialog": false,
+                  "button": {
+                    "icon": "alarm_off",
+                    "title": {
+                      "label_en": "Close the Opportunity",
+                      "label_es": "Cerrar la Oportunidad"
+                    },
+                    "requiresGridItemSelected": true
+                  }
+                },
+                {
+                  "actionName": "LOCK_PROPOSAL",
+                  "requiresDialog": true,
+                  "button": {
+                    "icon": "lock",
+                    "title": {
+                      "label_en": "Lock",
+                      "label_es": "Bloquear"
+                    },
+                    "requiresGridItemSelected": false,
+                    "hideWhenSelectedItem": {
+                      "column": "is_locked",
+                      "value": true
+                    }
+                  },
+                  "dialogInfo": {
+                    "name": "genericDialog",
+                    "fields": [
+                      {
+                        "text1": {
+                          "label_es": "Motivo del bloqueo",
+                          "optional": false,
+                          "label_en": "Lock Reason"
+                        }
+                      }
+                    ]
+                  },
+                  "endPointParams": [
+                    {
+                      "argumentName": "proposalName",
+                      "selObjectPropertyName": "name"
+                    },
+                    {
+                      "argumentName": "lockReason",
+                      "element": "text1"
+                    }
+                  ]
+                },
+                {
+                  "actionName": "UNLOCK_PROPOSAL",
+                  "requiresDialog": false,
+                  "button": {
+                    "icon": "lock_open",
+                    "title": {
+                      "label_en": "Unlock",
+                      "label_es": "Desbloquear"
+                    },
+                    "requiresGridItemSelected": false,
+                    "showWhenSelectedItem": {
+                      "column": "is_locked",
+                      "value": true
+                    }
+                  },
+                  "endPointParams": [
+                    {
+                      "argumentName": "proposalName",
+                      "selObjectPropertyName": "name"
+                    }
+                  ]
+                },
+                {
+                  "actionName": "PROPOSAL_ADDURLATTACHMENT",
+                  "requiresDialog": true,
+                  "button": {
+                    "icon": "add_link",
+                    "title": {
+                      "label_en": "Add Attachment",
+                      "label_es": "Añadir Adjunto"
+                    },
+                    "requiresGridItemSelected": true
+                  },
+                  "dialogInfo": {
+                    "name": "genericDialog",
+                    "fields": [
+                      {
+                        "text1": {
+                          "label_en": "Doc Url",
+                          "label_es": "Vínculo"
+                        }
+                      },
+                      {
+                        "text2": {
+                          "label_en": "Title",
+                          "label_es": "Título",
+                          "optional": true
+                        }
+                      }
+                    ]
+                  },
+                  "endPointParams": [
+                    {
+                      "argumentName": "proposalName",
+                      "selObjectPropertyName": "name"
+                    },
+                    {
+                      "argumentName": "url",
+                      "element": "text1",
+                      "defaultValue": ""
+                    },
+                    {
+                      "argumentName": "briefSummary",
+                      "element": "text2",
+                      "defaultValue": ""
+                    }
+                  ]
+                },
+                {
+                  "actionName": "PROPOSAL_ADDAWSATTACHMENT",
+                  "requiresDialog": true,
+                  "button": {
+                    "icon": "attach_file_add",
+                    "title": {
+                      "label_en": "Add Attachment AWS",
+                      "label_es": "Añadir Adjunto AWS"
+                    },
+                    "requiresGridItemSelected": true
+                  },
+                  "dialogInfo": {
+                    "name": "uploadFileDialog",
+                    "fields": []
+                  },
+                  "endPointParams": [
+                    {
+                      "argumentName": "proposalName",
+                      "selObjectPropertyName": "name"
+                    }
+                  ]
+                },
+                {
+                  "actionName": "REMOVE_ATTACHMENT",
+                  "requiresDialog": true,
+                  "button": {
+                    "icon": "link_off",
+                    "title": {
+                      "label_en": "Remove Attachment",
+                      "label_es": "Eliminar Adjunto"
+                    },
+                    "requiresGridItemSelected": true
+                  },
+                  "dialogInfo": {
+                    "name": "genericDialog",
+                    "gridContent": true,
+                    "dialogQuery": {
+                      "actionName": "GET_PROPOSAL_ATTACHMENTS",
+                      "variableForData": "",
+                      "endPointParams": [
+                        {
+                          "argumentName": "proposalName",
+                          "selObjectPropertyName": "name"
+                        }
+                      ]
+                    },
+                    "columns": [
+                      {
+                        "name": "file_link",
+                        "label_en": "Link",
+                        "label_es": "Vínculo",
+                        "width": "40%",
+                        "sort": false,
+                        "filter": true,
+                        "align": "left"
+                      },
+                      {
+                        "name": "brief_summary",
+                        "label_en": "Title",
+                        "label_es": "Título",
+                        "width": "40%",
+                        "sort": true,
+                        "filter": false
+                      },
+                      {
+                        "name": "original_file_name",
+                        "label_en": "Original File Name",
+                        "label_es": "Nombre Original del Archivo",
+                        "width": "40%",
+                        "sort": true,
+                        "filter": false
+                      },
+                      {
+                        "name": "aws_file",
+                        "label_en": "AWS File",
+                        "label_es": "Archivo AWS",
+                        "width": "40%",
+                        "sort": true,
+                        "filter": false
+                      }
+                    ],
+                    "automatic": true
+                  },
+                  "endPointParams": [
+                    {
+                      "argumentName": "proposalName",
+                      "selObjectPropertyName": "name"
+                    },
+                    {
+                      "argumentName": "attachmentId",
+                      "selObjectPropertyName": "id",
+                      "getFromGrid": true
+                    }
+                  ]
+                },
+                {
+                  "actionName": "OPEN_ATTACHMENTS",
+                  "requiresDialog": true,
+                  "button": {
+                    "icon": "attach_file",
+                    "title": {
+                      "label_en": "Open Attachments",
+                      "label_es": "Abrir Adjuntos"
+                    },
+                    "requiresGridItemSelected": true
+                  },
+                  "dialogInfo": {
+                    "name": "genericDialog",
+                    "filesListContent": true,
+                    "hideDoButton": true,
+                    "dialogQuery": {
+                      "actionName": "GET_PROPOSAL_ATTACHMENTS",
+                      "variableForData": "",
+                      "endPointParams": [
+                        {
+                          "argumentName": "proposalName",
+                          "selObjectPropertyName": "name"
+                        }
+                      ]
+                    }
+                  },
+                  "endPointParams": [
+                    {
+                      "argumentName": "proposalName",
+                      "selObjectPropertyName": "name"
+                    },
+                    {
+                      "argumentName": "url",
+                      "element": "text1",
+                      "defaultValue": ""
+                    }
+                  ]
+                },
+                {
+                  "actionName": "AUDIT_FOR_GIVEN_PROPOSAL",
+                  "endPoint": "/moduleproposals/ProposalsAPIqueries",
+                  "requiresDialog": true,
+                  "button": {
+                    "icon": "rule",
+                    "title": {
+                      "label_en": "Opportunity Audit",
+                      "label_es": "Auditoría de la Oportunidad"
+                    },
+                    "requiresGridItemSelected": false
+                  },
+                  "clientMethod": "getObjectAuditInfo",
+                  "endPointParams": [
+                    {
+                      "argumentName": "proposalName",
+                      "selObjectPropertyName": "name"
+                    }
+                  ],
+                  "dialogInfo": {
+                    "name": "auditDialog",
+                    "hideDoButton": true,
+                    "automatic": true,
+                    "action": [
+                      {
+                        "actionName": "PROPOSAL_SET_AUDIT_ID_REVIEWED",
+                        "requiresDialog": false,
+                        "notGetViewData": true,
+                        "secondaryActionToPerform": {
+                          "name": "getObjectAuditInfo",
+                          "endPointParams": [
+                            {
+                              "argumentName": "proposalName",
+                              "selObjectPropertyName": "name"
+                            }
+                          ]
+                        },
+                        "clientMethod": "signAudit",
+                        "endPointParams": [
+                          {
+                            "argumentName": "proposalName",
+                            "selObjectPropertyName": "name"
+                          },
+                          {
+                            "argumentName": "auditId",
+                            "targetValue": true
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "actionName": "PROPOSAL_ADDPICTURE",
+                  "requiresDialog": true,
+                  "zzzendPointUrl": "Samples",
+                  "button": {
+                    "icon": "add_a_photo",
+                    "title": {
+                      "label_en": "Take Picture",
+                      "label_es": "Tomar foto"
+                    },
+                    "requiresGridItemSelected": false
+                  },
+                  "dialogInfo": {
+                    "name": "takePictureDialog",
+                    "fields": []
+                  },
+                  "endPointParams": [
+                    {
+                      "argumentName": "proposalName",
+                      "selObjectPropertyName": "name"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "CkEditor",
+              "endPointResponseArray": [
+                "ROOT"
+              ],
+              "docProperty": "notes"
+            }
+          ],
+          "actions": [
+            {
+              "actionName": "CLOSE_PROPOSAL",
+              "endPointParams": [
+                {
+                  "argumentName": "proposalName",
+                  "selObjectPropertyName": "name"
+                }
+              ],
+              "requiresDialog": false,
+              "button": {
+                "icon": "alarm_off",
+                "title": {
+                  "label_en": "Close the Opportunity",
+                  "label_es": "Cerrar la Oportunidad"
+                },
+                "requiresGridItemSelected": true
+              }
+            },
+            {
+              "actionName": "LOCK_PROPOSAL",
+              "requiresDialog": true,
+              "button": {
+                "icon": "lock",
+                "title": {
+                  "label_en": "Lock",
+                  "label_es": "Bloquear"
+                },
+                "requiresGridItemSelected": false,
+                "hideWhenSelectedItem": {
+                  "column": "is_locked",
+                  "value": true
+                }
+              },
+              "dialogInfo": {
+                "name": "genericDialog",
+                "fields": [
+                  {
+                    "text1": {
+                      "label_es": "Motivo del bloqueo",
+                      "optional": false,
+                      "label_en": "Lock Reason"
+                    }
+                  }
+                ]
+              },
+              "endPointParams": [
+                {
+                  "argumentName": "proposalName",
+                  "selObjectPropertyName": "name"
+                },
+                {
+                  "argumentName": "lockReason",
+                  "element": "text1"
+                }
+              ]
+            },
+            {
+              "actionName": "UNLOCK_PROPOSAL",
+              "requiresDialog": false,
+              "button": {
+                "icon": "lock_open",
+                "title": {
+                  "label_en": "Unlock",
+                  "label_es": "Desbloquear"
+                },
+                "requiresGridItemSelected": false,
+                "showWhenSelectedItem": {
+                  "column": "is_locked",
+                  "value": true
+                }
+              },
+              "endPointParams": [
+                {
+                  "argumentName": "proposalName",
+                  "selObjectPropertyName": "name"
+                }
+              ]
+            },
+            {
+              "actionName": "PROPOSAL_ADDURLATTACHMENT",
+              "requiresDialog": true,
+              "button": {
+                "icon": "add_link",
+                "title": {
+                  "label_en": "Add Attachment",
+                  "label_es": "Añadir Adjunto"
+                },
+                "requiresGridItemSelected": true
+              },
+              "dialogInfo": {
+                "name": "genericDialog",
+                "fields": [
+                  {
+                    "text1": {
+                      "label_en": "Doc Url",
+                      "label_es": "Vínculo"
+                    }
+                  },
+                  {
+                    "text2": {
+                      "label_en": "Title",
+                      "label_es": "Título",
+                      "optional": true
+                    }
+                  }
+                ]
+              },
+              "endPointParams": [
+                {
+                  "argumentName": "proposalName",
+                  "selObjectPropertyName": "name"
+                },
+                {
+                  "argumentName": "url",
+                  "element": "text1",
+                  "defaultValue": ""
+                },
+                {
+                  "argumentName": "briefSummary",
+                  "element": "text2",
+                  "defaultValue": ""
+                }
+              ]
+            },
+            {
+              "actionName": "PROPOSAL_ADDAWSATTACHMENT",
+              "requiresDialog": true,
+              "button": {
+                "icon": "attach_file_add",
+                "title": {
+                  "label_en": "Add Attachment AWS",
+                  "label_es": "Añadir Adjunto AWS"
+                },
+                "requiresGridItemSelected": true
+              },
+              "dialogInfo": {
+                "name": "uploadFileDialog",
+                "fields": []
+              },
+              "endPointParams": [
+                {
+                  "argumentName": "proposalName",
+                  "selObjectPropertyName": "name"
+                }
+              ]
+            },
+            {
+              "actionName": "REMOVE_ATTACHMENT",
+              "requiresDialog": true,
+              "button": {
+                "icon": "link_off",
+                "title": {
+                  "label_en": "Remove Attachment",
+                  "label_es": "Eliminar Adjunto"
+                },
+                "requiresGridItemSelected": true
+              },
+              "dialogInfo": {
+                "name": "genericDialog",
+                "gridContent": true,
+                "dialogQuery": {
+                  "actionName": "GET_PROPOSAL_ATTACHMENTS",
+                  "variableForData": "",
+                  "endPointParams": [
+                    {
+                      "argumentName": "proposalName",
+                      "selObjectPropertyName": "name"
+                    }
+                  ]
+                },
+                "columns": [
+                  {
+                    "name": "file_link",
+                    "label_en": "Link",
+                    "label_es": "Vínculo",
+                    "width": "40%",
+                    "sort": false,
+                    "filter": true,
+                    "align": "left"
+                  },
+                  {
+                    "name": "brief_summary",
+                    "label_en": "Title",
+                    "label_es": "Título",
+                    "width": "40%",
+                    "sort": true,
+                    "filter": false
+                  },
+                  {
+                    "name": "original_file_name",
+                    "label_en": "Original File Name",
+                    "label_es": "Nombre Original del Archivo",
+                    "width": "40%",
+                    "sort": true,
+                    "filter": false
+                  },
+                  {
+                    "name": "aws_file",
+                    "label_en": "AWS File",
+                    "label_es": "Archivo AWS",
+                    "width": "40%",
+                    "sort": true,
+                    "filter": false
+                  }
+                ],
+                "automatic": true
+              },
+              "endPointParams": [
+                {
+                  "argumentName": "proposalName",
+                  "selObjectPropertyName": "name"
+                },
+                {
+                  "argumentName": "attachmentId",
+                  "selObjectPropertyName": "id",
+                  "getFromGrid": true
+                }
+              ]
+            },
+            {
+              "actionName": "OPEN_ATTACHMENTS",
+              "requiresDialog": true,
+              "button": {
+                "icon": "attach_file",
+                "title": {
+                  "label_en": "Open Attachments",
+                  "label_es": "Abrir Adjuntos"
+                },
+                "requiresGridItemSelected": true
+              },
+              "dialogInfo": {
+                "name": "genericDialog",
+                "filesListContent": true,
+                "hideDoButton": true,
+                "dialogQuery": {
+                  "actionName": "GET_PROPOSAL_ATTACHMENTS",
+                  "variableForData": "",
+                  "endPointParams": [
+                    {
+                      "argumentName": "proposalName",
+                      "selObjectPropertyName": "name"
+                    }
+                  ]
+                }
+              },
+              "endPointParams": [
+                {
+                  "argumentName": "proposalName",
+                  "selObjectPropertyName": "name"
+                },
+                {
+                  "argumentName": "url",
+                  "element": "text1",
+                  "defaultValue": ""
+                }
+              ]
+            },
+            {
+              "actionName": "AUDIT_FOR_GIVEN_PROPOSAL",
+              "endPoint": "/moduleproposals/ProposalsAPIqueries",
+              "requiresDialog": true,
+              "button": {
+                "icon": "rule",
+                "title": {
+                  "label_en": "Opportunity Audit",
+                  "label_es": "Auditoría de la Oportunidad"
+                },
+                "requiresGridItemSelected": false
+              },
+              "clientMethod": "getObjectAuditInfo",
+              "endPointParams": [
+                {
+                  "argumentName": "proposalName",
+                  "selObjectPropertyName": "name"
+                }
+              ],
+              "dialogInfo": {
+                "name": "auditDialog",
+                "hideDoButton": true,
+                "automatic": true,
+                "action": [
+                  {
+                    "actionName": "PROPOSAL_SET_AUDIT_ID_REVIEWED",
+                    "requiresDialog": false,
+                    "notGetViewData": true,
+                    "secondaryActionToPerform": {
+                      "name": "getObjectAuditInfo",
+                      "endPointParams": [
+                        {
+                          "argumentName": "proposalName",
+                          "selObjectPropertyName": "name"
+                        }
+                      ]
+                    },
+                    "clientMethod": "signAudit",
+                    "endPointParams": [
+                      {
+                        "argumentName": "proposalName",
+                        "selObjectPropertyName": "name"
+                      },
+                      {
+                        "argumentName": "auditId",
+                        "targetValue": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "actionName": "PROPOSAL_ADDPICTURE",
+              "requiresDialog": true,
+              "zzzendPointUrl": "Samples",
+              "button": {
+                "icon": "add_a_photo",
+                "title": {
+                  "label_en": "Take Picture",
+                  "label_es": "Tomar foto"
+                },
+                "requiresGridItemSelected": false
+              },
+              "dialogInfo": {
+                "name": "takePictureDialog",
+                "fields": []
+              },
+              "endPointParams": [
+                {
+                  "argumentName": "proposalName",
+                  "selObjectPropertyName": "name"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

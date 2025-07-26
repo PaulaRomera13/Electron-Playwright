@@ -1,0 +1,50 @@
+{
+  "name": "creaciondetestplaywright",
+  "version": "1.0.0",
+  "description": "Generador de tests en formato JSON para Playwright",
+  "author": "Paula Romera Garzón",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "build-icons": "electron-icon-builder --input=icon.png --flatten --output=icons"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^26.0.12",
+    "electron-icon-builder": "^2.0.1"
+  },
+  "build": {
+    "appId": "playwrightgenerator.TRAZiT",
+    "files": [
+      "**/*",
+      "!node_modules/{.bin,electron-builder,electron}"
+    ],
+    "extraResources": [
+      {
+        "from": "modelJson.json",
+        "to": "modelJson.json"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "icons/icon.ico",
+      "asarUnpack": [
+        "**/*.dylib"
+      ]
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "icons/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "icons/icon.png"
+    }
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}
