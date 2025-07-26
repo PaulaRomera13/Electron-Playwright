@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ master ]
 
+permissions:
+  contents: write  # ✅ Necesario para que softprops/action-gh-release cree un release
+  
 jobs:
   # Job para verificar sintaxis y linting
   lint:
@@ -236,6 +239,10 @@ jobs:
           artifacts/electron-app-linux/**/*
           artifacts/electron-app-windows/**/*
           artifacts/electron-app-macos/**/*
+          **/*
+          !node_modules/**
+          !dist/**
+          !.git/**
         tag_name: v${{ github.run_number }}
         name: Release v${{ github.run_number }}
         body: |
@@ -252,8 +259,16 @@ jobs:
           - macOS
           
           ### Archivos incluidos:
-          - Aplicación Electron para cada plataforma
-          - Documentación completa
-          - Licencia propietaria
+          - **Aplicación Electron** para cada plataforma (Linux, Windows, macOS)
+          - **Código fuente completo** (main.js, js/, server.js, etc.)
+          - **Documentación** (README.md, CHANGELOG.md)
+          - **Configuración** (package.json, package-lock.json)
+          - **Licencia propietaria** (LICENSE)
+          - **Recursos** (icons/, index.html, index.css)
+          
+          ### Para usar esta versión:
+          1. Descarga los archivos de la plataforma que necesites
+          2. Para desarrollo: descarga el código fuente completo
+          3. Consulta CHANGELOG.md para ver los cambios específicos
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
