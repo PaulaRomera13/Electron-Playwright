@@ -23,8 +23,17 @@ jobs:
         cache: 'npm'
         
     - name: Instalar dependencias
-      run: npm ci
+      run: npm install
       
+    - name: Convertir saltos de línea a LF en todos los JS
+      run: |
+        echo "Convirtiendo saltos de línea a LF en todos los archivos .js..."
+        find . -type f -name "*.js" -not -path "./node_modules/*" -not -path "./dist/*" -exec dos2unix {} \;
+        echo "Conversión completada."
+        
+    - name: Ejecutar ESLint con fix
+      run: npm run lint:fix
+        
     - name: Verificar sintaxis JavaScript
       run: |
         echo "Verificando sintaxis de archivos JavaScript..."
