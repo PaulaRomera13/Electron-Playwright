@@ -256,4 +256,4 @@ jobs:
           - Documentación completa
           - Licencia propietaria
       env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }} 
+        GH_TOKEN: ${{ secrets.GH_TOKEN_CLASSIC }} 
