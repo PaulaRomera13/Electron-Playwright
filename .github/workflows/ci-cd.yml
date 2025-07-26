@@ -198,11 +198,13 @@ jobs:
           pattern: *-build
           merge-multiple: true
 
-      - name: Verificar archivos descargados
+      - name: Renombrar archivos para release
         run: |
-          ls -la release-assets/
-          echo "Contenido de release-assets:"
-          find release-assets -type f
+          cd release-assets
+          mv linux-build/electron-app-linux-v*.zip .
+          mv windows-build/electron-app-windows-v*.zip .
+          mv macos-build/electron-app-macos-v*.zip .
+          rm -r linux-build windows-build macos-build
 
       - name: Crear Release con assets
         uses: softprops/action-gh-release@v1
