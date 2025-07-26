@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [master]
+    branches: [ master ]
   pull_request:
-    branches: [master]
+    branches: [ master ]
 
 permissions:
   contents: write
@@ -79,7 +79,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: linux-build
+          name: electron-app-linux-zip
           path: electron-app-linux-v$VERSION.zip
 
   build-windows:
@@ -108,7 +108,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: windows-build
+          name: electron-app-windows-zip
           path: electron-app-windows-v$version.zip
 
   build-macos:
@@ -136,7 +136,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: macos-build
+          name: electron-app-macos-zip
           path: electron-app-macos-v$VERSION.zip
 
   test:
@@ -170,12 +170,14 @@ jobs:
           node-version: '22.9.0'
       - run: npm ci
 
+      # Obtener versión
       - name: Leer versión desde package.json
         id: version
         run: |
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
+      # Crear tag de versión
       - run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
@@ -184,34 +186,68 @@ jobs:
           git tag v${{ steps.version.outputs.version }}
           git push origin v${{ steps.version.outputs.version }}
 
-      - name: Crear ZIP del código fuente
+      # Paso 1: Crear ZIP del código fuente
+      - name: Crear ZIP del proyecto completo
         run: |
           mkdir -p release-assets
           VERSION=${{ steps.version.outputs.version }}
           zip -r release-assets/project-source-v$VERSION.zip . \
             -x "node_modules/**" ".git/**" "dist/**" "release-assets/**" ".github/**" "*.zip"
+      
+      # Paso 2: Subir el código fuente como artefacto
+      - uses: actions/upload-artifact@v4
+        with:
+          name: project-source
+          path: release-assets/project-source-v${{ steps.version.outputs.version }}.zip
 
+      # Paso 3: Descargar todos los builds
       - name: Descargar artifacts de build
         uses: actions/download-artifact@v4
         with:
           path: release-assets
-          pattern: *-build
+          pattern: electron-app-*
           merge-multiple: true
 
-      - name: Renombrar archivos para release
+      # Paso 4: Reorganizar los archivos descargados
+      - name: Renombrar archivos de build con versión
         run: |
-          cd release-assets
-          mv linux-build/electron-app-linux-v*.zip .
-          mv windows-build/electron-app-windows-v*.zip .
-          mv macos-build/electron-app-macos-v*.zip .
-          rm -r linux-build windows-build macos-build
+          VERSION=${{ steps.version.outputs.version }}
+          mv release-assets/electron-app-linux-zip/electron-app-linux-v$VERSION.zip release-assets/electron-app-linux-v$VERSION.zip || true
+          mv release-assets/electron-app-windows-zip/electron-app-windows-v$VERSION.zip release-assets/electron-app-windows-v$VERSION.zip || true
+          mv release-assets/electron-app-macos-zip/electron-app-macos-v$VERSION.zip release-assets/electron-app-macos-v$VERSION.zip || true
+          rm -rf release-assets/electron-app-*-zip
 
+      # Paso 5: Subir los builds como artefactos individuales
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: release-assets/electron-app-linux-v${{ steps.version.outputs.version }}.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: release-assets/electron-app-windows-v${{ steps.version.outputs.version }}.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-build
+          path: release-assets/electron-app-macos-v${{ steps.version.outputs.version }}.zip
+
+      # Paso 6: Preparar el changelog
+      - name: Leer CHANGELOG.md para body del release
+        id: changelog
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const changelog = fs.readFileSync('CHANGELOG.md', 'utf8');
+            core.setOutput('body', changelog);
+
+      # Paso 7: Crear el Release con todos los assets
       - name: Crear Release con assets
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.version.outputs.version }}
           name: Release v${{ steps.version.outputs.version }}
-          body: "Release automático v${{ steps.version.outputs.version }}"
+          body: ${{ steps.changelog.outputs.body }}
           files: |
             release-assets/electron-app-linux-v${{ steps.version.outputs.version }}.zip
             release-assets/electron-app-windows-v${{ steps.version.outputs.version }}.zip
