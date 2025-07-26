@@ -26,9 +26,8 @@ jobs:
     - name: Instalar dependencias
       run: npm install
 
-    - name: Convertir saltos de línea a LF en todos los JS
+    - name: Convertir saltos de línea a LF
       run: |
-        echo "Convirtiendo saltos de línea a LF..."
         find . -type f -name "*.js" -not -path "./node_modules/*" -not -path "./dist/*" -exec dos2unix {} \;
 
     - name: Ejecutar ESLint con fix
@@ -36,7 +35,6 @@ jobs:
 
     - name: Verificar sintaxis JS
       run: |
-        echo "Verificando sintaxis..."
         find . -name "*.js" -not -path "./node_modules/*" -not -path "./dist/*" -exec node -c {} \;
 
     - name: Ejecutar ESLint
@@ -62,23 +60,16 @@ jobs:
     needs: lint
     env:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
     steps:
     - uses: actions/checkout@v4
-
     - uses: actions/setup-node@v4
       with:
         node-version: '22.9.0'
         cache: 'npm'
-
     - run: npm ci
-
     - run: timeout 10s npm start || true
-
     - run: npm run dist
-
     - run: ls -la dist/
-
     - uses: actions/upload-artifact@v4
       with:
         name: electron-app-linux
@@ -91,23 +82,16 @@ jobs:
     needs: lint
     env:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
     steps:
     - uses: actions/checkout@v4
-
     - uses: actions/setup-node@v4
       with:
         node-version: '22.9.0'
         cache: 'npm'
-
     - run: npm ci
-
     - run: timeout 10s npm start || true
-
     - run: npm run dist
-
     - run: dir dist\
-
     - uses: actions/upload-artifact@v4
       with:
         name: electron-app-windows
@@ -120,23 +104,16 @@ jobs:
     needs: lint
     env:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
     steps:
     - uses: actions/checkout@v4
-
     - uses: actions/setup-node@v4
       with:
         node-version: '22.9.0'
         cache: 'npm'
-
     - run: npm ci
-
     - run: timeout 10s npm start || true
-
     - run: npm run dist
-
     - run: ls -la dist/
-
     - uses: actions/upload-artifact@v4
       with:
         name: electron-app-macos
@@ -147,30 +124,24 @@ jobs:
     name: Ejecutar tests
     runs-on: ubuntu-latest
     needs: lint
-
     steps:
     - uses: actions/checkout@v4
-
     - uses: actions/setup-node@v4
       with:
         node-version: '22.9.0'
         cache: 'npm'
-
     - run: npm ci
-
     - run: |
-        echo "Verificando archivos principales..."
         node -c main.js
         node -c server.js
         find js/ -name "*.js" -exec node -c {} \;
-        echo "✅ Archivos OK"
+        echo "✅ Archivos JS verificados"
 
   release:
     name: Crear Release
     runs-on: ubuntu-latest
     needs: [build-linux, build-windows, build-macos]
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-
     steps:
     - name: Checkout código
       uses: actions/checkout@v4
@@ -185,7 +156,16 @@ jobs:
 
     - name: Leer versión desde package.json
       id: version
-      run: echo "version=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+      run: |
+        VERSION=$(node -p "require('./package.json').version")
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+    - name: Crear tag Git vX.Y.Z
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git tag v${{ steps.version.outputs.version }}
+        git push origin v${{ steps.version.outputs.version }}
 
     - name: Crear ZIP del proyecto completo
       run: |
@@ -193,7 +173,7 @@ jobs:
         zip -r artifacts/project-source-v${{ steps.version.outputs.version }}.zip . \
           -x "node_modules/**" ".git/**" "dist/**" "artifacts/**" ".github/**" "*.zip"
 
-    - name: Descargar artefactos de build
+    - name: Descargar artefactos de builds
       uses: actions/download-artifact@v4
       with:
         path: artifacts
@@ -210,15 +190,16 @@ jobs:
           artifacts/project-source-v${{ steps.version.outputs.version }}.zip
         body: |
           ## Generador de Tests Playwright
-          
-          ### Cambios en esta versión:
-          - Build automático para Linux, Windows y macOS
-          - Verificación de sintaxis, estructura y pruebas básicas
-          
-          ### Archivos incluidos:
-          - Aplicaciones Electron por plataforma
-          - Código fuente completo (comprimido)
-          - Documentación, configuración y recursos
+
+          ### Cambios:
+          - Build automático para Linux, Windows, macOS
+          - Verificación de sintaxis y estructura
+          - Tests básicos
+
+          ### Archivos:
+          - Aplicaciones Electron (.zip/.exe)
+          - Código fuente completo
+          - Documentación y configuración
 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
