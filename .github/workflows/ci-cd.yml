@@ -63,6 +63,8 @@ jobs:
     name: Build en Linux
     runs-on: ubuntu-latest
     needs: lint
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     
     steps:
     - name: Checkout código
@@ -102,6 +104,8 @@ jobs:
     name: Build en Windows
     runs-on: windows-latest
     needs: lint
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     
     steps:
     - name: Checkout código
@@ -141,6 +145,8 @@ jobs:
     name: Build en macOS
     runs-on: macos-latest
     needs: lint
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     
     steps:
     - name: Checkout código
