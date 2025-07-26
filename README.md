@@ -45,3 +45,7 @@ Paula Romera Garzón
 ## Licencia
 
 Este proyecto está protegido por una licencia propietaria restrictiva. Todos los derechos están reservados para Paula Romera Garzón. No se permite el uso, distribución, modificación o comercialización del código sin autorización expresa.
+
+## Documentación del CI/CD
+
+Para más detalles sobre el pipeline de integración y despliegue continuo (CI/CD), consulta el archivo [`CI-CD-README.md`](./CI-CD-README.md) en la raíz del repositorio.
