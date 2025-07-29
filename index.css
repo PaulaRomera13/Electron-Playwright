@@ -1378,3 +1378,179 @@ body {
     flex-direction: column;
     gap: 10px;
 }
+
+/* Estilos para el test regresivo */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .regressive-dialog, .regressive-editors, .regressive-selector {
+    background: white;
+    padding: 0;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .regressive-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 15px 20px;
+    border-bottom: 1px solid #eee;
+    background: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .regressive-dialog-header h3 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 1.2em;
+    font-weight: 600;
+  }
+
+  .regressive-dialog-close {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #666;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: color 0.2s;
+  }
+
+  .regressive-dialog-close:hover {
+    color: #333;
+    background: #f0f0f0;
+  }
+
+  .regressive-dialog-content {
+    padding: 20px;
+  }
+
+  .regressive-dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .regressive-cancel-btn {
+    padding: 8px 16px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+  }
+
+  .regressive-cancel-btn:hover {
+    background: #5a6268;
+  }
+
+  .regressive-continue-btn {
+    padding: 8px 16px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+  }
+
+  .regressive-continue-btn:hover {
+    background: var(--secondary-color);
+  }
+  
+  .regressive-tab {
+    padding: 10px 15px;
+    margin-right: 5px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+  }
+  
+  .regressive-tab.active {
+    background: var(--primary-color);
+    color: white;
+  }
+  
+  .regressive-action-item {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+  }
+  
+  .regressive-action-item input {
+    margin-right: 10px;
+  }
+  
+  .action-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  .action-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .json-editor-group {
+    margin-bottom: 20px;
+  }
+  
+  .json-editor-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+  }
+  
+  .json-editor {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border: 2px solid #e1e5e9;
+    border-radius: 6px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 13px;
+    line-height: 1.4;
+    background: #fafbfc;
+    color: #333;
+    resize: vertical;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  
+  .json-editor:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    background: white;
+  }
+  
+  .json-editor::placeholder {
+    color: #999;
+    font-style: italic;
+  }

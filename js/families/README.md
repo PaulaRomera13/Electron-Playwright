@@ -4,6 +4,19 @@ Esta carpeta contiene los generadores específicos para diferentes tipos de test
 
 ## Generadores disponibles
 
+### `testGeneratorRegressive.js` 
+- **Propósito**: Genera tests regresivos que cubren múltiples pantallas o múltiples acciones.
+- **Características**:
+  - Configuración de número de pantallas para tests regresivos
+  - Editor de JSONs múltiples para pegar la estructura de cada pantalla
+  - Selector de acciones avanzado que permite elegir acciones específicas de cada pantalla.
+  - Sistema de navegación entre pantallas con botones anterior/siguiente
+  - Panel de acciones guardadas con gestión visual de todas las acciones
+  - Generación de tests completos que cubren flujos de múltiples pantallas
+  - Barra de navegación regresiva con indicadores visuales
+  - Modo regresivo especializado con interfaz adaptada
+- **Casos de uso**: Tests de flujos completos, navegación entre pantallas, validación de procesos complejos
+
 ### `testGeneratorDialog.js`
 - **Propósito**: Genera tests para diálogos simples
 - **Características**:
@@ -85,6 +98,24 @@ Todos los generadores siguen una estructura común:
 3. **Validación**: Verifican que los datos de entrada sean válidos
 4. **Configuración**: Procesan las configuraciones específicas del tipo
 5. **Generación**: Crean el código Playwright correspondiente
+
+## Nuevas funcionalidades
+
+### Tests Regresivos
+El nuevo generador `testGeneratorRegressive.js` introduce funcionalidades avanzadas:
+
+- **Configuración de pantallas múltiples**: Permite definir el número de pantallas para tests regresivos
+- **Editor de JSONs múltiples**: Interfaz para pegar los JSONs de cada pantalla
+- **Selector de acciones avanzado**: Permite elegir acciones específicas de cada pantalla
+- **Sistema de navegación**: Navegación fluida entre pantallas con indicadores visuales
+- **Panel de acciones guardadas**: Gestión visual de todas las acciones con opciones de eliminación
+- **Generación de tests completos**: Crea tests que cubren flujos de múltiples pantallas
+
+### Integración con el servidor
+Los tests regresivos utilizan nuevos endpoints del servidor:
+- `POST /clear-regressive`: Limpia el archivo de tests regresivos
+- `POST /upload-regressive`: Guarda múltiples pantallas de una vez
+- `GET /regressive-json`: Obtiene las pantallas regresivas guardadas
 
 ## Cómo agregar un nuevo generador
 

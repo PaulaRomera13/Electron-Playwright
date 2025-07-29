@@ -10,11 +10,13 @@ Esta carpeta contiene todo el código JavaScript de la aplicación Electron para
   - Maneja la inicialización de la aplicación
   - Gestiona la carga del modelo JSON
   - Coordina la generación de tests
+  - Integra el nuevo sistema de tests regresivos
 
 - **`sidebar.js`** - Gestión de la barra lateral
   - Renderiza la configuración principal
   - Muestra las acciones disponibles
   - Gestiona la interacción con el usuario
+  - Soporte para navegación de tests regresivos
 
 - **`baseTestGenerator.js`** - Generador base de tests
   - Clase base para todos los generadores de tests
@@ -22,12 +24,14 @@ Esta carpeta contiene todo el código JavaScript de la aplicación Electron para
   - Proporciona métodos utilitarios compartidos
   - Maneja la lógica común de generación de tests
   - Establece el patrón de herencia para todos los generadores específicos
+  - Soporte mejorado para tests regresivos
 
 ### Subcarpetas
 
 #### `families/`
 Contiene generadores específicos para diferentes tipos de tests. Cada archivo maneja un tipo particular de acción:
 
+- **`testGeneratorRegressive.js`** - Tests regresivos con múltiples pantallas
 - **`testGeneratorDialog.js`** - Tests para diálogos simples
 - **`testGeneratorDialogWithColumnSelection.js`** - Tests para diálogos con selección de columnas
 - **`testGeneratorExport.js`** - Tests para funcionalidades de exportación
@@ -77,6 +81,7 @@ Contiene utilidades y helpers para el procesamiento de datos:
 - **Manejo de configuraciones**: Procesa configuraciones comunes de tests
 - **Formateo de código**: Aplica formato consistente al código generado
 - **Gestión de errores**: Maneja errores comunes en la generación de tests
+- **Soporte para tests regresivos**: Funcionalidades específicas para tests de múltiples pantallas
 
 #### Métodos principales
 - `validateInput()` - Valida los datos de entrada del generador
@@ -84,7 +89,7 @@ Contiene utilidades y helpers para el procesamiento de datos:
 - `formatCode()` - Aplica formato al código Playwright generado
 - `handleError()` - Maneja errores durante la generación
 - `getCommonImports()` - Obtiene imports comunes para todos los tests
-
+- `generateRegressiveTest()` - Genera tests regresivos completos
 
 ### Integración con generadores específicos
 
@@ -94,6 +99,7 @@ Cada generador en la carpeta `families/` extiende de `baseTestGenerator.js`:
 2. **Implementación**: Cada generador implementa su propio método `generateTest()`
 3. **Reutilización**: Utilizan los métodos utilitarios de la clase base
 4. **Consistencia**: Mantienen un formato y estructura consistente
+5. **Tests Regresivos**: El nuevo generador regresivo extiende las funcionalidades base
 
 ### Configuración común
 
@@ -103,6 +109,25 @@ El generador base maneja configuraciones que se aplican a todos los tests:
 - **Configuración de navegación**: Manejo de URLs y páginas
 - **Configuración de esperas**: Timeouts y condiciones de espera
 - **Configuración de aserciones**: Validaciones comunes
+- **Configuración de tests regresivos**: Gestión de múltiples pantallas y navegación
+
+## Nuevas funcionalidades:
+
+### Tests Regresivos
+El nuevo sistema de tests regresivos introduce:
+
+- **Configuración de pantallas múltiples**: Permite definir el número de pantallas para tests regresivos.
+- **Editor de JSONs múltiples**: Interfaz para pegar los JSONs de cada pantalla
+- **Selector de acciones avanzado**: Permite elegir acciones específicas de cada pantalla
+- **Sistema de navegación**: Navegación fluida entre pantallas con indicadores visuales
+- **Panel de acciones guardadas**: Gestión visual de todas las acciones con opciones de eliminación
+- **Generación de tests completos**: Crea tests que cubren flujos de múltiples pantallas
+
+### Integración con el servidor
+Los tests regresivos utilizan nuevos endpoints del servidor:
+- `POST /clear-regressive`: Limpia el archivo de tests regresivos
+- `POST /upload-regressive`: Guarda múltiples pantallas de una vez
+- `GET /regressive-json`: Obtiene las pantallas regresivas guardadas
 
 ## Flujo de trabajo
 
@@ -112,4 +137,5 @@ El generador base maneja configuraciones que se aplican a todos los tests:
 4. Cuando el usuario selecciona una acción, se identifica el tipo
 5. Se instancia el generador correspondiente de `families/` (que extiende de `baseTestGenerator.js`)
 6. El generador crea el test específico usando las utilidades de `utils/` y métodos de la clase base
-7. El test generado se muestra al usuario para su revisión 
+7. El test generado se muestra al usuario para su revisión
+8. Para tests regresivos: Se gestionan múltiples pantallas o múltiples acciones con navegación y persistencia de estado 

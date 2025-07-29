@@ -16,9 +16,11 @@
         <div class="header">
             <h1><i class="fas fa-boxes"></i>Playwright</h1>
             <p>Sirve para crear test de playwright de manera más rápida y fácil</p>
+            <button id="regressiveTestButton" class="toggle-button modeljson-header-btn" type="button" style="left: 40px; right: auto;">
+                <i class="fas fa-layer-group"></i> Crear Test Regresivo
+            </button>
             <button id="toggleModelJsonForm" class="toggle-button modeljson-header-btn" type="button">Actualizar modeloJson</button>
         </div>
-
         <!-- Modal para pegar modelJson -->
         <div class="modeljson-modal-overlay" id="modeljsonUploadContainer" style="display: none;">
             <div class="modeljson-modal">
@@ -107,6 +109,7 @@
             </div>
         </div>
     </div>
+    
 
     <!-- Importación del script principal de la aplicación como módulo ES6 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>

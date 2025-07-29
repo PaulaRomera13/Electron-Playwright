@@ -1,5 +1,70 @@
 # CHANGELOG
 
+## [2.0.0] - 2025-07-29
+
+### 🆕 Añadido - Tests Regresivos
+
+- **Sistema completo de tests regresivos**
+  - Nuevo generador `testGeneratorRegressive.js` para crear tests que cubren múltiples pantallas o múltiples acciones.
+  - Configuración de número de pantallas para tests regresivos
+  - Editor de JSONs múltiples para pegar la estructura de cada pantalla
+  - Selector de acciones avanzado que permite elegir acciones específicas de cada pantalla
+  - Sistema de navegación entre pantallas con botones anterior/siguiente
+  - Panel de acciones guardadas con gestión visual de todas las acciones
+  - Generación de tests completos que cubren flujos de múltiples pantallas
+
+- **Nuevos endpoints del servidor para tests regresivos**
+  - `POST /clear-regressive`: Limpia el archivo de tests regresivos antes de empezar un nuevo test
+  - `POST /upload-regressive`: Guarda múltiples pantallas de una vez con validación completa
+  - `GET /regressive-json`: Obtiene las pantallas regresivas guardadas para debugging
+  - Validación robusta de datos con mensajes de error detallados
+
+- **Interfaz de usuario mejorada para tests regresivos**
+  - Barra de navegación regresiva con indicadores visuales de pantalla actual
+  - Panel de acciones guardadas con opciones de eliminación individual
+  - Modo regresivo especializado con interfaz adaptada
+  - Generación de tests mejorada con resultados más detallados y organizados
+  - Botones de generación contextuales según el número de pantallas
+
+- **Funcionalidades avanzadas de navegación**
+  - Navegación fluida entre pantallas con estado persistente
+  - Indicadores visuales de progreso (pantalla actual/total)
+  - Botones de navegación inteligentes (deshabilitados en extremos)
+  - Gestión de estado de pantallas con configuración independiente
+  - Sincronización automática entre navegación y configuración
+
+###  Mejorado
+
+- **Arquitectura del servidor**
+  - Refactorización de endpoints para mejor manejo de errores
+  - Validación mejorada de datos de entrada
+  - Sistema de backup automático más robusto
+  - Logging mejorado para debugging
+
+- **Gestión de archivos**
+  - Manejo optimizado de archivos JSON grandes
+  - Validación de estructura de datos mejorada
+  - Sistema de backup más eficiente
+  - Gestión de errores más detallada
+
+- **Interfaz de usuario**
+  - Mejor organización visual de elementos
+  - Feedback más claro para el usuario
+  - Manejo de errores más intuitivo
+  - Navegación más fluida entre componentes
+
+### 🐛 Corregido
+
+- **Sincronización de datos**
+  - Solucionado problema de guardado de múltiples pantallas en modo regresivo
+  - Mejorado el manejo de estados entre pantallas
+  - Corregida la persistencia de configuraciones
+
+- **Validación de datos**
+  - Mejorada la validación de JSONs de entrada
+  - Corregidos errores de parsing en estructuras complejas
+  - Validación más robusta de componentes y acciones
+
 ## [1.0.0] - 2025-07-26
 
 ### Añadido

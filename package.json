@@ -1,6 +1,6 @@
 {
   "name": "creaciondetestplaywright",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Generador de tests en formato JSON para Playwright",
   "author": "Paula Romera Garzón",
   "main": "main.js",
@@ -29,6 +29,10 @@
       {
         "from": "modelJson.json",
         "to": "modelJson.json"
+      },
+      {
+        "from": "regressive.json",
+        "to": "regressive.json"
       }
     ],
     "win": {
