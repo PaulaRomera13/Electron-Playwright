@@ -1,133 +1,31 @@
 [
   {
-    "component": "Tabs",
-    "tabs": [
-      {
-        "tabLabel": {
-          "label_es": "Decisión pendiente",
-          "label_en": "Pending Decision"
-        },
-        "component": "SingleView",
-        "hideLeftPane": true,
-        "hasOwnComponent": true,
-        "viewQuery": {
-          "actionName": "INVESTIGATION_EVENTS_PENDING_DECISION",
-          "dataResponse": "ArrayInRoot",
-          "endPointParams": []
-        },
-        "view_definition": [
-          {},
-          {
-            "actions": [
-              {
-                "button": {
-                  "icon": "find_in_page",
-                  "requiresGridItemSelected": true,
-                  "title": {
-                    "label_es": "Crear Investigación",
-                    "label_en": "Create Investigation"
-                  }
-                },
-                "requiresDialog": false,
-                "endPointParams": [
-                  {
-                    "selObjectPropertyName": "event_id",
-                    "argumentName": "objectToAddObjectName"
-                  },
-                  {
-                    "selObjectPropertyName": "object_type",
-                    "argumentName": "objectToAddObjectType"
-                  }
-                ],
-                "actionName": "NEW_INVESTIGATION",
-                "origin": "actions",
-                "tabIdx": 0
-              }
-            ],
-            "row_buttons": []
-          }
-        ]
-      },
-      {
-        "tabLabel": {
-          "label_es": "Investigaciones",
-          "label_en": "Investigations"
-        },
-        "component": "SingleView",
-        "hideLeftPane": true,
-        "hasOwnComponent": true,
-        "viewQuery": {
-          "actionName": "OPEN_INVESTIGATIONS",
-          "dataResponse": "ArrayInRoot",
-          "endPointParams": []
-        },
-        "view_definition": [
-          {},
-          {
-            "actions": [],
-            "row_buttons": []
-          }
-        ]
-      }
-    ]
-  },
-  {
     "component": "SingleView",
     "view_definition": [
       {},
       {
-        "actions": [],
-        "row_buttons": [
+        "actions": [
           {
-            "actionName": "CHANGE_INSTRUMENT_FAMILY",
-            "notGetViewData": true,
-            "selectedItemPropertyName": "selectedItems",
-            "requiresDialog": true,
-            "certificationException": true,
-            "secondaryActionToPerform": {
-              "name": "refreshSelProcData"
-            },
+            "actionName": "START_CALIBRATION",
+            "requiresDialog": false,
             "button": {
-              "icon": "manage_accounts",
+              "img": "inst_ev_type_calibration.svg",
               "title": {
-                "label_en": "Change Instrument Family",
-                "label_es": "Cambiar Familia Instrumento"
+                "label_en": "Start Calibration",
+                "label_es": "Iniciar Calibración"
               },
-              "requiresGridItemSelected": false
-            },
-            "dialogInfo": {
-              "name": "genericDialog",
-              "fields": [
-                {
-                  "list1": {
-                    "label_en": "Family",
-                    "label_es": "Familia",
-                    "addBlankValueOnTop": true,
-                    "addBlankValueAtBottom": false,
-                    "valuesFromMasterData": {
-                      "propertyNameContainer": "instruments_family",
-                      "propertyKeyName": "name",
-                      "propertyKeyValueEn": "name",
-                      "propertyKeyValueEs": "name"
-                    }
-                  }
-                }
-              ]
+              "requiresGridItemSelected": true
             },
             "endPointParams": [
               {
                 "argumentName": "instrumentName",
                 "selObjectPropertyName": "name"
-              },
-              {
-                "argumentName": "newFamilyName",
-                "element": "list1",
-                "defaultValue": ""
               }
             ],
-            "origin": "row_buttons"
+            "origin": "actions"
           }
-        ]
+        ],
+        "row_buttons": []
       }
     ]
   }

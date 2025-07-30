@@ -1,7 +1,7 @@
 // Gestor del sidebar y configuración principal
 
-import { isTabsComponent, getTabLabels } from './utils/tabUtils.js'
-import { isObjectByTabsComponent, getObjectByTabsLabels } from './utils/objectByTabsUtils.js';
+import { isTabsComponent, getTabLabels } from './utils/components/tabUtils.js'
+import { isObjectByTabsComponent, getObjectByTabsLabels } from './utils/components/objectByTabsUtils.js';
 
 // Utilidad para crear barra de tabs
 function createTabsBar(tabLabels, onTabClick) {

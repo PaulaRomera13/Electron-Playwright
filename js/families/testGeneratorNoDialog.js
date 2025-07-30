@@ -1,6 +1,6 @@
 // Generador de tests para acciones sin diálogo
 import { BaseTestGenerator } from "../baseTestGenerator.js"
-import { isTabsComponent, getTabLabels } from "../utils/tabUtils.js"
+import { isTabsComponent, getTabLabels } from "../utils/components/tabUtils.js"
 
 export class TestGeneratorNoDialog extends BaseTestGenerator {
   /**
