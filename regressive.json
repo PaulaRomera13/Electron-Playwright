@@ -6,22 +6,470 @@
       {
         "actions": [
           {
-            "actionName": "START_CALIBRATION",
-            "requiresDialog": false,
+            "actionName": "NEW_INSTRUMENT",
+            "requiresDialog": true,
+            "endPointParams": [
+              {
+                "argumentName": "instrumentName",
+                "element": "text1",
+                "defaultValue": ""
+              },
+              {
+                "argumentName": "familyName",
+                "element": "list1",
+                "defaultValue": "",
+                "fieldType": "STRING"
+              },
+              {
+                "argumentName": "modelNumber",
+                "element": "text2",
+                "defaultValue": ""
+              },
+              {
+                "argumentName": "supplierName",
+                "element": "list2",
+                "defaultValue": "",
+                "fieldType": "STRING"
+              },
+              {
+                "argumentName": "serialNumber",
+                "element": "text3",
+                "defaultValue": ""
+              },
+              {
+                "argumentName": "manufacturerName",
+                "element": "list3",
+                "defaultValue": "",
+                "fieldType": "STRING"
+              },
+              {
+                "argumentName": "responsible",
+                "element": "list4",
+                "defaultValue": "",
+                "addToFieldNameAndValue": true,
+                "notAddWhenValueIsBlank": true,
+                "isAdhocField": true,
+                "fieldType": "STRING"
+              },
+              {
+                "argumentName": "responsible_backup",
+                "element": "list5",
+                "defaultValue": "",
+                "addToFieldNameAndValue": true,
+                "notAddWhenValueIsBlank": true,
+                "isAdhocField": true,
+                "fieldType": "STRING"
+              },
+              {
+                "argumentName": "poDate",
+                "element": "date1",
+                "defaultValue": "",
+                "optional": true
+              },
+              {
+                "argumentName": "installationDate",
+                "element": "date2",
+                "defaultValue": ""
+              }
+            ],
             "button": {
-              "img": "inst_ev_type_calibration.svg",
+              "icon": "create_new_folder",
               "title": {
-                "label_en": "Start Calibration",
-                "label_es": "Iniciar Calibración"
+                "label_en": "New",
+                "label_es": "Nuevo"
+              },
+              "requiresGridItemSelected": false
+            },
+            "dialogInfo": {
+              "name": "genericDialog",
+              "fields": [
+                {
+                  "text1": {
+                    "label_en": "New Instrument Name",
+                    "label_es": "Nombre para nuevo instrumento"
+                  }
+                },
+                {
+                  "list1": {
+                    "label_en": "Family",
+                    "label_es": "Familia",
+                    "addBlankValueOnTop": true,
+                    "addBlankValueAtBottom": false,
+                    "valuesFromMasterData": {
+                      "propertyNameContainer": "instruments_family",
+                      "propertyKeyName": "name",
+                      "propertyKeyValueEn": "name",
+                      "propertyKeyValueEs": "name"
+                    }
+                  }
+                },
+                {
+                  "text2": {
+                    "label_en": "Model",
+                    "label_es": "Modelo"
+                  }
+                },
+                {
+                  "list2": {
+                    "items": [
+                      {
+                        "keyName": "LEICA",
+                        "keyValue_en": "Leica Biosystems",
+                        "keyValue_es": "Leica Biosystems"
+                      },
+                      {
+                        "keyName": "PB INSTRUMENTS",
+                        "keyValue_en": "PB Instruments",
+                        "keyValue_es": "PB Instruments"
+                      },
+                      {
+                        "keyName": "METTLER",
+                        "keyValue_en": "Mettler Toledo",
+                        "keyValue_es": "Mettler Toledo"
+                      },
+                      {
+                        "keyName": "PERKIN ELMER",
+                        "keyValue_en": "Perkin Elmer",
+                        "keyValue_es": "Perkin Elmer"
+                      },
+                      {
+                        "keyName": "AGILENT",
+                        "keyValue_en": "Agilent",
+                        "keyValue_es": "Agilent"
+                      },
+                      {
+                        "keyName": "WATERS",
+                        "keyValue_en": "Waters",
+                        "keyValue_es": "Water"
+                      }
+                    ],
+                    "label_en": "Supplier",
+                    "label_es": "Proveedor"
+                  }
+                },
+                {
+                  "text3": {
+                    "label_en": "Serial Number",
+                    "label_es": "Número de Serie"
+                  }
+                },
+                {
+                  "list3": {
+                    "items": [
+                      {
+                        "keyName": "METTLER",
+                        "keyValue_en": "Mettler Toledo",
+                        "keyValue_es": "Mettler Toledo"
+                      },
+                      {
+                        "keyName": "PERKIN ELMER",
+                        "keyValue_en": "Perkin Elmer",
+                        "keyValue_es": "Perkin Elmer"
+                      },
+                      {
+                        "keyName": "AGILENT",
+                        "keyValue_en": "Agilent",
+                        "keyValue_es": "Agilent"
+                      },
+                      {
+                        "keyName": "WATERS",
+                        "keyValue_en": "Waters",
+                        "keyValue_es": "Water"
+                      }
+                    ],
+                    "label_en": "ManufacturerName",
+                    "label_es": "Fabricante"
+                  }
+                },
+                {
+                  "list4": {
+                    "label_en": "Responsible",
+                    "label_es": "Responsable",
+                    "optional": true,
+                    "addBlankValueOnTop": true,
+                    "addBlankValueAtBottom": false,
+                    "valuesFromMasterData": {
+                      "propertyNameContainer": "users",
+                      "propertyKeyName": "user",
+                      "propertyKeyValueEn": "user",
+                      "propertyKeyValueEs": "user"
+                    },
+                    "dependencyFieldBehavior": [
+                      {
+                        "field": "list5",
+                        "rule": "whenEmpty",
+                        "resetValue": true,
+                        "action": "hide"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "list5": {
+                    "label_en": "Responsible Backup",
+                    "label_es": "Backup del responsable",
+                    "optional": true,
+                    "addBlankValueOnTop": true,
+                    "addBlankValueAtBottom": false,
+                    "valuesFromMasterData": {
+                      "propertyNameContainer": "users",
+                      "propertyKeyName": "user",
+                      "propertyKeyValueEn": "user",
+                      "propertyKeyValueEs": "user"
+                    }
+                  }
+                },
+                {
+                  "date1": {
+                    "label_en": "Purchase Date",
+                    "label_es": "Fecha Compra",
+                    "optional": true
+                  }
+                },
+                {
+                  "date2": {
+                    "label_en": "Installation Date",
+                    "label_es": "Fecha Instalación"
+                  }
+                }
+              ]
+            },
+            "origin": "actions"
+          }
+        ],
+        "row_buttons": []
+      }
+    ]
+  },
+  {
+    "component": "SingleView",
+    "view_definition": [
+      {},
+      {
+        "actions": [
+          {
+            "actionName": "REMOVE_ATTACHMENT",
+            "requiresDialog": true,
+            "button": {
+              "icon": "link_off",
+              "title": {
+                "label_en": "Remove Attachment",
+                "label_es": "Eliminar Adjunto"
               },
               "requiresGridItemSelected": true
+            },
+            "dialogInfo": {
+              "name": "genericDialog",
+              "gridContent": true,
+              "dialogQuery": {
+                "actionName": "GET_INSTR_ATTACHMENTS",
+                "variableForData": "",
+                "endPointParams": [
+                  {
+                    "argumentName": "instrumentName",
+                    "selObjectPropertyName": "name"
+                  }
+                ],
+                "xxxsubViewFilter": {
+                  "ER-FQ": [],
+                  "ER-MB": []
+                }
+              },
+              "columns": [
+                {
+                  "name": "file_link",
+                  "label_en": "Link",
+                  "label_es": "Vínculo",
+                  "width": "40%",
+                  "sort": false,
+                  "filter": true,
+                  "align": "left"
+                },
+                {
+                  "name": "brief_summary",
+                  "label_en": "Title",
+                  "label_es": "Título",
+                  "width": "40%",
+                  "sort": true,
+                  "filter": false
+                }
+              ],
+              "langConfig": {
+                "gridHeader": [
+                  {
+                    "fldName": "file_link",
+                    "label_en": "Link",
+                    "label_es": "Vínculo",
+                    "width": "40%",
+                    "sort": false,
+                    "filter": true,
+                    "align": "left"
+                  },
+                  {
+                    "fldName": "brief_summary",
+                    "label_en": "Title",
+                    "label_es": "Título",
+                    "width": "40%",
+                    "sort": false,
+                    "filter": true,
+                    "align": "left"
+                  }
+                ]
+              },
+              "automatic": true
+            },
+            "dialogInfo2": {
+              "name": "genericDialog",
+              "fields": [
+                {
+                  "text1": {
+                    "label_en": "Doc Url",
+                    "label_es": "Vínculo"
+                  }
+                }
+              ]
             },
             "endPointParams": [
               {
                 "argumentName": "instrumentName",
                 "selObjectPropertyName": "name"
+              },
+              {
+                "argumentName": "attachmentId",
+                "selObjectPropertyName": "id",
+                "getFromGrid": true
               }
             ],
+            "origin": "actions"
+          },
+          {
+            "actionName": "OPEN_ATTACHMENTS",
+            "requiresDialog": true,
+            "button": {
+              "icon": "attach_file",
+              "title": {
+                "label_en": "Open Attachments",
+                "label_es": "Abrir Adjuntos"
+              },
+              "requiresGridItemSelected": true
+            },
+            "dialogInfo": {
+              "name": "genericDialog",
+              "filesListContent": true,
+              "hideCloseButton": true,
+              "dialogQuery": {
+                "actionName": "GET_INSTR_ATTACHMENTS",
+                "variableForData": "",
+                "endPointParams": [
+                  {
+                    "argumentName": "instrumentName",
+                    "selObjectPropertyName": "name"
+                  },
+                  {
+                    "argumentName": "family",
+                    "selObjectPropertyName": "family"
+                  }
+                ]
+              }
+            },
+            "endPointParams": [
+              {
+                "argumentName": "instrumentName",
+                "selObjectPropertyName": "instrument"
+              },
+              {
+                "argumentName": "family",
+                "selObjectPropertyName": "family"
+              },
+              {
+                "argumentName": "fileUrl",
+                "element": "text1",
+                "defaultValue": ""
+              }
+            ],
+            "origin": "actions"
+          },
+          {
+            "actionName": "ADD_INVEST_OBJECTS",
+            "requiresDialog": true,
+            "button": {
+              "icon": "loupe",
+              "title": {
+                "label_en": "Add to Investigation",
+                "label_es": "Añadir a Investigación"
+              },
+              "requiresGridItemSelected": true
+            },
+            "endPointParams": [
+              {
+                "argumentName": "investigationId",
+                "getFromGrid": true,
+                "selObjectPropertyName": "id"
+              },
+              {
+                "argumentName": "objectToAddObjectType",
+                "fixValue": "instrument"
+              },
+              {
+                "argumentName": "objectToAddObjectName",
+                "selObjectPropertyName": "name"
+              }
+            ],
+            "dialogInfo": {
+              "name": "genericDialog",
+              "gridContent": true,
+              "columns": [
+                {
+                  "name": "id",
+                  "label_en": "Investigation",
+                  "label_es": "Investigación",
+                  "width": "40%",
+                  "sort": false,
+                  "filter": true,
+                  "align": "left"
+                },
+                {
+                  "name": "created_on",
+                  "label_en": "Created on",
+                  "label_es": "F.Creación",
+                  "width": "40%",
+                  "sort": true,
+                  "filter": false
+                }
+              ],
+              "langConfig": {
+                "gridHeader": [
+                  {
+                    "fldName": "id",
+                    "label_en": "Investigation",
+                    "label_es": "Investigación",
+                    "width": "40%",
+                    "sort": false,
+                    "filter": true,
+                    "align": "left"
+                  },
+                  {
+                    "fldName": "created_on",
+                    "label_en": "Created on",
+                    "label_es": "F.Creación",
+                    "width": "40%",
+                    "sort": true,
+                    "filter": false
+                  }
+                ]
+              },
+              "dialogQuery": {
+                "actionName": "OPEN_INVESTIGATIONS",
+                "button": {
+                  "icon": "refresh",
+                  "title": {
+                    "label_en": "Reload",
+                    "label_es": "Recargar"
+                  },
+                  "requiresGridItemSelected": true
+                }
+              }
+            },
             "origin": "actions"
           }
         ],

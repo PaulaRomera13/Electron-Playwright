@@ -24,12 +24,13 @@ import { EventManager } from "./utils/core/eventManager.js";
 import { ActionRenderer } from "./utils/render/actionRenderer.js";
 import { StateManager } from "./utils/core/stateManager.js";
 import { RegressiveActionManager } from "./utils/regressive/regressiveActionManager.js";
+import { FormFactory } from "./utils/factory/formFactory.js";
 
 /**
  * Clase principal refactorizada que coordina toda la aplicación
  * Sigue el principio de responsabilidad única - solo coordina los componentes
  */
-class PlaywrightTestGeneratorRefactored {
+class PlaywrightTestGenerator {
   constructor() {
     // Inicializar managers de responsabilidades específicas
     this.appInitializer = new AppInitializer(this);
@@ -70,6 +71,9 @@ class PlaywrightTestGeneratorRefactored {
     // Utils
     this.jsonUtils = new JsonUtils(this);
     this.fieldUtils = new FieldUtils(this);
+    
+    // Factory para formularios
+    this.formFactory = new FormFactory(this);
   }
 
   /**
@@ -170,11 +174,13 @@ class PlaywrightTestGeneratorRefactored {
     console.log('Estadísticas del estado:', this.stateManager.getStateStats());
     console.log('Estadísticas regresivas:', this.regressiveActionManager.getRegressiveActionStats());
     console.log('¿Estado válido?', this.stateManager.isStateValid());
+    console.log('Estadísticas del renderer:', this.actionRenderer.getRendererStats());
+    console.log('Estadísticas del sidebar:', this.sidebarManager.getSidebarStats());
   }
 }
 
 // Inicializar la aplicación refactorizada
-window.playwrightApp = new PlaywrightTestGeneratorRefactored();
+window.playwrightApp = new PlaywrightTestGenerator();
 
 // Exponer métodos de debug globalmente para desarrollo
 window.debugApp = () => window.playwrightApp.debug();
