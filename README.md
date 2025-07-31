@@ -214,10 +214,6 @@ npm run lint:fix
 npm test
 ```
 
-## 🔒 Licencia
-
-Este proyecto está protegido por una licencia propietaria restrictiva. Todos los derechos están reservados para **Paula Romera Garzón**. No se permite el uso, distribución, modificación o comercialización del código sin autorización expresa.
-
 ## 👨‍💻 Autor
 
 **Paula Romera Garzón**
